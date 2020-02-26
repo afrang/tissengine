@@ -57,6 +57,8 @@
     import gallerydetail from "./gallery/gallerydetail";
     import feature from  "./attr/feature";
     import Attributes from "./attr/Attributes";
+    import color from "./attr/color";
+    import productgroup from "./Product/productgroup";
     export default {
             name: "Dashboard",
         components: {
@@ -74,7 +76,10 @@
             gallery,
             contactus,
             gallerydetail,
-            feature,Attributes
+            feature,
+            Attributes,
+            color,
+            productgroup
         },
         data(){
             return{
@@ -227,6 +232,56 @@
                                 icon: 'icofont-verification-check ',
                                 href: '#feature',
                                 title: this.$t('feature')
+                            },
+                            {
+                                icon: 'icofont-verification-check ',
+                                href: '#color',
+                                title: this.$t('colormanager')
+                            },
+                        ]
+                    },
+                    {
+                        href: '',
+                        title: this.$t('product'),
+                        icon: 'icofont-box',
+                        child: [
+                            {
+                                icon: 'icofont-verification-check',
+                                href: '#productgroup',
+                                title: this.$t('productgroup')
+                            },
+                            {
+                                icon: 'icofont-verification-check ',
+                                href: '#product',
+                                title: this.$t('product')
+                            },
+
+                        ]
+                    },
+                    {
+                        href: '',
+                        title: this.$t('invoice'),
+                        icon: 'icofont-list',
+                        child: [
+                            {
+                                icon: 'icofont-verification-check',
+                                href: '#newinvoice',
+                                title: this.$t('newinvoice')
+                            },
+                            {
+                                icon: 'icofont-verification-check ',
+                                href: '#archiveinvoice',
+                                title: this.$t('archiveinvoice')
+                            },
+                            {
+                                icon: 'icofont-verification-check ',
+                                href: '#cancelinvoice',
+                                title: this.$t('cancelinvoice')
+                            },
+                            {
+                                icon: 'icofont-verification-check ',
+                                href: '#findinvoice',
+                                title: this.$t('findinvoice')
                             },
                         ]
                     },

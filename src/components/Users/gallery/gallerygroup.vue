@@ -1,5 +1,8 @@
 <template>
     <div class="container text-right pt-5">
+        <div class="wmaster">
+
+
         <div>
             <a   @click="addgroup"  class="btn btn-success mr-3"  ><span class="icofont-ui-add text-white"></span></a>
             <a    @click="listgroup" class="btn btn-danger"  ><span class="icofont-list text-white"></span></a>
@@ -73,7 +76,7 @@
                 <showerror v-if="error" :errors="error"></showerror>
             </template>
         </div>
-
+        </div>
     </div>
 </template>
 

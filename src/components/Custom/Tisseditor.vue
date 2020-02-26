@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <modal height="auto" class="modal-dialog" role="document" name="code">
+        <modal :key="keys"  height="auto" class="modal-dialog" role="document" name="code">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
@@ -24,7 +24,7 @@
                 </div>
             </div>
         </modal>
-        <modal         height="auto" class="modal-dialog" role="document" name="aparat">
+        <modal   :key="keys"       height="auto" class="modal-dialog" role="document" name="aparat">
 
                 <div class="modal-content">
                     <div class="modal-header">
@@ -51,7 +51,7 @@
 
 
         </modal>
-        <modal name="uploader"
+        <modal :key="keys" name="uploader"
                :width="'100%'"
                height="auto"
                :transition="'fade'"
@@ -136,7 +136,7 @@
         <template v-if="showeditors==true">
 
         </template>
-        <froala id="edit" :tag="'textarea'"   :config="config" v-model="text"></froala>
+        <froala id="edit" :key="keys" :tag="'textarea'"   :config="config" v-model="text"></froala>
 
         <a @click="apartshow" class="btn text-white btn-sm btn-dark m-1">{{ $t('Aparat')}} | <span class="icofont-ui-movie"></span>  </a>
         <a @click="codeshow"  class="btn  text-white btn-sm btn-dark m-1">{{ $t('embedcode')}} | <span class="icofont-code"></span> </a>
@@ -205,6 +205,11 @@
             text:{
                 type:String,
                 default:''
+
+            },
+            keys:{
+                type:Number,
+                default:1
 
             },
             backdata:{

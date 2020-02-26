@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <div class="container pt-5 text-right" dir="rtl">
+    <div class=" pt-5">
+      <div class="container wmaster text-right" dir="rtl">
           <h4 v-text="$t('contactus')"></h4>
           <hr>
             <select>

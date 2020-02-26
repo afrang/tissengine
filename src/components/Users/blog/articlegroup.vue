@@ -122,6 +122,7 @@
                 tags:[]
             }
         },
+
         taglist:[],
         computed: {
             filteredItems() {
@@ -137,6 +138,7 @@
                 });
                 return b;
             },
+
             taggenerator(){
                 let b=[];
                 this.blog.totags.forEach(function(item){

@@ -1,157 +1,160 @@
 <template>
-    <div class="container text-right" dir="rtl">
-        <div class="right text-right pt-4">
-            <h4 @click="loadmodel" v-text="$t('feature')"></h4>
-            <a @click="loadlist" class="btn btn-primary text-white m-2 icofont-list"> <span v-text="$t('List')"></span> </a>
-            <a @click="addlist" class="btn btn-primary text-white m-2 icofont-ui-add" > <span v-text="$t('Add')"></span> </a>
-        </div>
-        <template v-if="mode=='itemedit'">
-            <h4 v-text="$t('itemfor')+detail.name"></h4>
-            <form @submit.prevent="saveitem">
-                <div class="col-sm-6 col-xs-12 text-right">
-                    <label   v-text="$t('name')"></label>
-                    <div class="input-group mb-2">
-                        <input type="text"  v-model="item.name" class="form-control text-right"  :placeholder="$t('name')">
-                    </div>
-                </div>
-                <template v-if="item.id!=null">
-                    <div class="row">
-                        <div class="col-sm-6 col-xs-12 text-right">
-                            <label   v-text="$t('icon')"></label> <small :class="detail.icon"></small>
-                            <div class="input-group mb-2 icofont-">
-                                <input type="text"   v-model="item.icon" class="form-control text-right"  placeholder="icofont-...">
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label   v-text="$t('picture')"></label>
-                            <file-uploader
-                                    :key="1"
-                                    mode="AttrProductitem"
-                                    v-on:filename="filenamesitem"
-                                    :id='item.id'
-                                    name="thump"
-                                    :file="item.image"
-                            ></file-uploader>
-                        </div>
-                        <div class="col-sm-8">
-                            <label   v-text="$t('help')"></label>
-                            <tisseditor
-                                    :key="1"
-                                    :text="item.help"
-                                    v-on:myevent="doSomethingitem"
-                                    :mode="'AttrProductitem'"></tisseditor>
-                        </div>
-                    </div>
-                </template>
-                <input type="submit" :value="$t('save')" class="btn btn-success ">
-                <input type="button" :value="$t('back')"  @click="backtomain" class="btn btn-primary mr-4 ">
-                <showerror :errors="error"></showerror>
-
-
-            </form>
-        </template>
-        <template v-if="mode=='list'">
-            <div class="list-group">
-                <a  v-for="(item,index) in list" :key="index" class="list-group-item list-group-item-action flex-column align-items-start ">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1" v-text="item.name"></h5>
-                        <small>
-                            <span @click="edit(index)" class="btn btn-success icofont-edit"></span>
-                        </small>
-                    </div>
-                </a>
+    <div class="container text-right pt-5  " dir="rtl">
+        <div class="wmaster ">
+            <div class="right text-right pt-4">
+                <h4 @click="loadmodel" v-text="$t('feature')"></h4>
+                <a @click="loadlist" class="btn btn-primary text-white m-2 icofont-list"> <span v-text="$t('List')"></span> </a>
+                <a @click="addlist" class="btn btn-primary text-white m-2 icofont-ui-add" > <span v-text="$t('Add')"></span> </a>
             </div>
-        </template>
-        <template v-if="mode=='edit'">
-            <form @submit.prevent="save">
-                <div class="col-sm-6 col-xs-12 text-right">
-                    <label   v-text="$t('name')"></label>
-                    <div class="input-group mb-2">
-
-                        <input type="text"  v-model="detail.name" class="form-control text-right"  :placeholder="$t('name')">
-                    </div>
-                </div>
-
-                <template v-if="detail.id!=null">
-                    <div class="row">
-                        <div class="col-sm-6 col-xs-12 text-right">
-                            <label   v-text="$t('unit')"></label>
-                            <div class="input-group mb-2 icofont-">
-
-                                <input type="text"   v-model="detail.unit" class="form-control text-right"  placeholder="unit">
-                            </div>
+            <template v-if="mode=='itemedit'">
+                <h4 v-text="$t('itemfor')+detail.name"></h4>
+                <form @submit.prevent="saveitem">
+                    <div class="col-sm-6 col-xs-12 text-right">
+                        <label   v-text="$t('name')"></label>
+                        <div class="input-group mb-2">
+                            <input type="text"  v-model="item.name" class="form-control text-right"  :placeholder="$t('name')">
                         </div>
-                        <div class="col-sm-6 col-xs-12 text-right">
-                            <label   v-text="$t('icon')"></label> <small :class="detail.icon"></small>
-                            <div class="input-group mb-2 icofont-">
-                                <input type="text"   v-model="detail.icon" class="form-control text-right"  placeholder="icofont-...">
-
+                    </div>
+                    <template v-if="item.id!=null">
+                        <div class="row">
+                            <div class="col-sm-6 col-xs-12 text-right">
+                                <label   v-text="$t('icon')"></label> <small :class="detail.icon"></small>
+                                <div class="input-group mb-2 icofont-">
+                                    <input type="text"   v-model="item.icon" class="form-control text-right"  placeholder="icofont-...">
+                                </div>
                             </div>
                         </div>
                         <hr>
-                        <div class="col-sm-6">
-                            <label   v-text="$t('mode')"></label>
-                            <select class="form-control" v-model="detail.mode">
-                                <option v-for="(item,index) in model" :key="index" :value="item.id" v-text="$t(item.name)"></option>
-                            </select>
-
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label   v-text="$t('picture')"></label>
+                                <file-uploader
+                                        :key="1"
+                                        mode="AttrProductitem"
+                                        v-on:filename="filenamesitem"
+                                        :id='item.id'
+                                        name="thump"
+                                        :file="item.image"
+                                ></file-uploader>
+                            </div>
+                            <div class="col-sm-8">
+                                <label   v-text="$t('help')"></label>
+                                <tisseditor
+                                        :key="1"
+                                        :text="item.help"
+                                        v-on:myevent="doSomethingitem"
+                                        :mode="'AttrProductitem'"></tisseditor>
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            <template v-if="detail.mode==4">
-                                <label   v-text="$t('options')"></label>
-                                <div>
-                                    <a @click="additem(item.id)" class="btn btn-success text-white" v-text="$t('additem')"></a>
-                                    <hr>
-                                    <ul class="list-group">
-                                        <li v-for="(items,index) in detail.to_options" :key="index" class="list-group-item">
-                                            <span v-text="items.name" ></span>
-                                            <div class="float-left" >
-                                                <span   @click="edititem(index)" class="icofont-ui-edit" ></span>
-                                                <span   @click="deleteitem(items.id,detail.id)" class="icofont-ui-delete ml-4" ></span>
-                                            </div>
-                                        </li>
-                                    </ul>
+                    </template>
+                    <input type="submit" :value="$t('save')" class="btn btn-success ">
+                    <input type="button" :value="$t('back')"  @click="backtomain" class="btn btn-primary mr-4 ">
+                    <showerror :errors="error"></showerror>
+
+
+                </form>
+            </template>
+            <template v-if="mode=='list'">
+                <div class="list-group">
+                    <a  v-for="(item,index) in list" :key="index" class="list-group-item list-group-item-action flex-column align-items-start ">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1" v-text="item.name"></h5>
+                            <small>
+                                <span @click="edit(index)" class="btn btn-success icofont-edit"></span>
+                            </small>
+                        </div>
+                    </a>
+                </div>
+            </template>
+            <template v-if="mode=='edit'">
+                <form @submit.prevent="save">
+                    <div class="col-sm-6 col-xs-12 text-right">
+                        <label   v-text="$t('name')"></label>
+                        <div class="input-group mb-2">
+
+                            <input type="text"  v-model="detail.name" class="form-control text-right"  :placeholder="$t('name')">
+                        </div>
+                    </div>
+
+                    <template v-if="detail.id!=null">
+                        <div class="row">
+                            <div class="col-sm-6 col-xs-12 text-right">
+                                <label   v-text="$t('unit')"></label>
+                                <div class="input-group mb-2 icofont-">
+
+                                    <input type="text"   v-model="detail.unit" class="form-control text-right"  placeholder="unit">
                                 </div>
+                            </div>
+                            <div class="col-sm-6 col-xs-12 text-right">
+                                <label   v-text="$t('icon')"></label> <small :class="detail.icon"></small>
+                                <div class="input-group mb-2 icofont-">
+                                    <input type="text"   v-model="detail.icon" class="form-control text-right"  placeholder="icofont-...">
 
-                            </template>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="col-sm-6">
+                                <label   v-text="$t('mode')"></label>
+                                <select class="form-control" v-model="detail.mode">
+                                    <option v-for="(item,index) in model" :key="index" :value="item.id" v-text="$t(item.name)"></option>
+                                </select>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <template v-if="detail.mode==4">
+                                    <label   v-text="$t('options')"></label>
+                                    <div>
+                                        <a @click="additem(item.id)" class="btn btn-success text-white" v-text="$t('additem')"></a>
+                                        <hr>
+                                        <ul class="list-group">
+                                            <li v-for="(items,index) in detail.to_options" :key="index" class="list-group-item">
+                                                <span v-text="items.name" ></span>
+                                                <div class="float-left" >
+                                                    <span   @click="edititem(index)" class="icofont-ui-edit" ></span>
+                                                    <span   @click="deleteitem(items.id,detail.id)" class="icofont-ui-delete ml-4" ></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </template>
+                            </div>
+
                         </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label   v-text="$t('picture')"></label>
 
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label   v-text="$t('picture')"></label>
+                                <file-uploader
+                                        :key="2"
+                                        mode="Attrprodcut"
+                                        v-on:filename="filenames"
+                                        :id='detail.id'
+                                        name="thump"
+                                        :file="detail.image"
+                                ></file-uploader>
+                            </div>
+                            <div class="col-sm-8">
+                                <label   v-text="$t('help')"></label>
 
-                            <file-uploader
-                                    :key="2"
-                                    mode="Attrprodcut"
-                                    v-on:filename="filenames"
-                                    :id='detail.id'
-                                    name="thump"
-                                    :file="detail.image"
-                            ></file-uploader>
+                                <tisseditor
+                                        :key="2"
+                                        :text="detail.help"
+                                        v-on:myevent="doSomething"
+                                        :mode="'Attrprodcut'"></tisseditor>
+                            </div>
                         </div>
-                        <div class="col-sm-8">
-                            <label   v-text="$t('help')"></label>
-
-                            <tisseditor
-                                    :key="2"
-                                    :text="detail.help"
-                                    v-on:myevent="doSomething"
-                                    :mode="'Attrprodcut'"></tisseditor>
-                        </div>
-                    </div>
-                </template>
-                <input type="submit" :value="$t('save')" class="btn btn-success ">
-                <showerror :errors="error"></showerror>
+                    </template>
+                    <input type="submit" :value="$t('save')" class="btn btn-success ">
+                    <showerror :errors="error"></showerror>
 
 
-            </form>
+                </form>
 
-        </template>
+            </template>
+        </div>
+
     </div>
 </template>
 

@@ -1,0 +1,443 @@
+<template>
+    <div class="container pt-4" dir="rtl">
+        <div class="text-right wmaster">
+            <h4 v-text="$t('groupproducnt')"></h4>
+            <hr>
+            <a @click="add" class="btn btn-success icofont-ui-add p-3 text-white"></a>
+            <a @click="listgroup" class="btn btn-success icofont-listing-box  mr-4 p-3 text-white"></a>
+            <hr>
+            <pre>{{ mode }}</pre>
+            <template v-if="mode=='list'">
+                <table class="table table-striped" dir="rtl">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col" v-text="$t('name')"></th>
+                        <th scope="col"  v-text="$t('url')"></th>
+                        <th  class="text-center" scope="col" v-text="$t('edit')"></th>
+                        <th class=" text-center"   scope="col"  v-text="$t('sub')"></th>
+                        <th class="text-center" scope="col"  v-text="$t('del')"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item,index) in list.data" :key="index">
+                        <th scope="row" v-text="index+1"></th>
+                        <td v-text="item.name"></td>
+                        <td v-text="item.url"></td>
+                        <td @click="edit(item.id)" class="text-center"><span class="icofont icofont-edit-alt"></span></td>
+                        <td @click="edit(item.id)" class="text-center"><span class="icofont icofont-sub-listing"></span></td>
+                        <td @click="remove(item.id)" class="text-center"><span class="icofont icofont-delete-alt"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <paginate
+                        :page-count="list.from"
+                        :page-range="list.per_page"
+                        :margin-pages="2"
+                        :click-handler="clickCallback"
+                        :prev-text="$t('Prev')"
+                        :next-text="$t('Next')"
+                        :container-class="'pagination'"
+                        :page-class="'page-item'">
+                </paginate>
+            </template>
+
+            <template v-if="mode=='add'">
+                <h6 v-text="$t('EditGroup')"></h6>
+                <form @submit.prevent="save">
+                    <div class="row">
+                        <div class="form-group col-sm-6 col-xs-12">
+                            <label  v-text="$t('name')"></label>
+                            <input @keyup="urlcreate" type="text" v-model="group.name" class="form-control" :placeholder="$t('name')">
+                            <small  class="form-text text-muted"></small>
+                        </div>
+
+                        <div class="form-group col-sm-6 col-xs-12">
+                            <label v-text="$t('url')"></label>
+                            <input   type="text" v-model="group.url" class="form-control"  :placeholder="$t('url')">
+                            <small  class="form-text text-muted"></small>
+                        </div>
+                        <template v-if="group.id!=null">
+                            <div class="form-group col-sm-6 col-xs-12">
+                                <label v-text="$t('title')"></label>
+                                <input   type="text" v-model="group.title" class="form-control"  :placeholder="$t('title')">
+                                <small  class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group col-sm-12 col-xs-12">
+                                <label v-text="$t('keywords')"></label>
+                                <textarea   type="text" v-model="group.keywords" class="form-control"  :placeholder="$t('keywords')"></textarea>
+                                <small  class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group col-sm-12 col-xs-12">
+                                <label v-text="$t('description')"></label>
+                                <textarea   type="text" v-model="group.description" class="form-control"  :placeholder="$t('description')"></textarea>
+                                <small  class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group col-sm-12 col-xs-12">
+
+                                <label v-text="$t('tags')"></label>
+
+                                <vue-tags-input class="col-xs-12"
+                                                :key="1"
+                                                v-model="tag"
+                                                :tags="tags"
+                                                @tags-changed="newTags => tags = newTags"
+                                                :autocomplete-items="filteredItems"
+                                />                                <small  class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group col-sm-12 col-xs-12">
+
+                                <label v-text="$t('features')"></label>
+
+                                <vue-tags-input class="col-xs-12"
+                                                :key="1"
+                                                v-model="fae"
+                                                :tags="feas"
+                                                :placeholder="$t('addfeature')"
+                                                @tags-changed="newTags => feas = newTags"
+                                                :autocomplete-items="filteredItemsfeas"
+                                />                                <small  class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group col-sm-12 col-xs-12">
+
+                                <label v-text="$t('attrbiute')"></label>
+
+                                <vue-tags-input class="col-xs-12"
+                                                :placeholder="$t('addattr')"
+                                                :key="2"
+                                                v-model="attr"
+                                                :tags="attrs"
+                                                @tags-changed="newTags => attrs = newTags"
+                                                :autocomplete-items="filteredItemsattr"
+                                />
+
+                            </div>
+                            <div class="form-group col-sm-8 col-xs-12">
+                                <label v-text="$t('text')"></label>
+
+                                <tisseditor  :text="group.text"
+                                             :keys="1"
+
+                                             :id="group.id"
+                                             v-on:myevent="dotext"
+                                             :mode="'GroupProduct'"></tisseditor>
+                            </div>
+                            <div class="form-group">
+                                <label v-text="$t('thump')"></label>
+                                <file-uploader
+                                        :key="1"
+                                        mode="GroupProduct"
+                                        v-on:filename="'thump'"
+                                        :id='group.id'
+                                        name="thump"
+                                        :file="group.thump"
+                                ></file-uploader>
+                            </div>
+                            <div class="form-group col-sm-12 col-xs-12">
+                                <label v-text="$t('seotext')"></label>
+
+                                <tisseditor  :text="group.seotext"
+                                             :keys="2"
+                                             :id="group.id"
+                                             v-on:myevent="doseotext"
+                                             :mode="'GroupProduct'"></tisseditor>
+                            </div>
+
+                        </template>
+                        <div class="clearfix col-sm-12">
+                            <input type="submit" :value="$t('save')" class="btn btn-dark">
+                            <input type="btn" :value="$t('backtolist')" class="btn mr-4 btn-danger">
+
+                        </div>
+                    </div>
+                    <showerror :errors="error"></showerror>
+                </form>
+            </template>
+        </div>
+
+
+    </div>
+
+</template>
+
+<script>
+
+        import VueTagsInput from '@johmun/vue-tags-input';
+
+    import Paginate from 'vuejs-paginate'
+    import FileUploader from "../../Custom/FileUploader";
+    import Tisseditor from "../../Custom/Tisseditor";
+
+    import Showerror from "../../Custom/Showerror";
+    export default {
+        name: "productgroup",
+        components: {Showerror,Paginate,Tisseditor,FileUploader,VueTagsInput},
+        data(){
+            return{
+                sub:0,
+
+                mode:null,
+
+                error:[],
+                group:{
+                    id:null,
+                    name:null,
+                    sub:0,
+                    url:null,
+                    menuitem:1,
+                    keywords:null,
+                    description:null,
+                    text:null,
+                    seotext:null,
+                    icon:null,
+                    thump:null,
+                    title:null,
+                },
+                list:[],
+                color:[],
+
+
+                Attrlist:[],
+                attrs:[],
+                attr:'',
+
+                taglist:[],
+                tags:[],
+                tag:'',
+
+                fealist:[],
+                feas:[],
+                fea:null
+            }
+        },
+        computed: {
+            filteredItems() {
+                return this.autocompleteItems.filter(i => {
+                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+                });
+            },
+            autocompleteItems(){
+                let b=[];
+                this.taglist.forEach(function (item) {
+                    b.push({text:item.name});
+
+                });
+                return b;
+            },
+            taggenerator(){
+                let b=[];
+                this.group.to_tags.forEach(function(item){
+                    b.push(item.name);
+                });
+                return b;
+            },
+
+            filteredItemsfeas() {
+                console.log(this.autocompleteItemsfeas);
+                return this.autocompleteItemsfeas.filter(i => {
+                    return i.text;
+                });
+            },
+            autocompleteItemsfeas(){
+                let b=[];
+                this.fealist.forEach(function (item) {
+                    b.push({text:item.name});
+
+                });
+                return b;
+            },
+            feasgenerator(){
+                let b=[];
+                this.group.to_feature.forEach(function(item){
+                    b.push(item.name);
+                });
+                return b;
+            },
+
+
+            filteredItemsattr() {
+                return this.autocompleteItemsattr.filter(i => {
+                    return i.text.toLowerCase().indexOf(this.attr.toLowerCase()) !== -1;
+                });
+            },
+            autocompleteItemsattr(){
+                let b=[];
+                this.Attrlist.forEach(function (item) {
+                    b.push({text:item.name});
+
+                });
+                return b;
+            },
+            attrgenerator(){
+                let b=[];
+                this.group.to_attr.forEach(function(item){
+                    b.push(item.name);
+                });
+                return b;
+            }
+        },
+        methods:{
+            resetform(){
+                this.group={
+                    id:null,
+                    name:null,
+                    sub:0,
+                    url:null,
+                    menuitem:1,
+                    keywords:null,
+                    description:null,
+                    text:null,
+                    seotext:null,
+                    icon:null,
+                    thump:null,
+                    title:null,
+                }
+            },
+            dotext(e){
+                this.group.text=e;
+            },
+            doseotext(e){
+                this.group.seotext=e;
+            },
+            add(){
+                this.resetform();
+                this.mode='add';
+
+            },
+            save(){
+                let that=this;
+                if(this.group.id==null){
+                    this.$axios.post( this.$url+'user/pgroup',
+                        this.group,
+                        {
+                            headers: {
+                                Authorization:localStorage.token
+                            }
+                        }
+                    ).then(function(res){
+                        that.group=res.data;
+                        that.$swal.fire(that.$t('Saved'));
+                    })
+                        .catch((error) => {
+                            that.error = error.response.data.errors;
+
+                        });
+                }else{
+                    this.group.tag=JSON.stringify(this.tags);
+                    this.group.fea=JSON.stringify(this.feas);
+                    this.group.attrs=JSON.stringify(this.attrs);
+                    this.$axios.put( this.$url+'user/pgroup/'+this.group.id,
+                        this.group,
+                        {
+                            headers: {
+                                Authorization:localStorage.token
+                            }
+                        }
+                    ).then(function(res){
+                      //  that.group=res.data;
+                        that.$swal.fire(that.$t('Saved'));
+                    })
+                        .catch((error) => {
+                            that.error = error.response.data.errors;
+
+                        });
+
+                }
+            },
+            urlcreate(){
+                if(this.group.id==null){
+                    let str=this.group.name;
+                    this.group.url=str.replace(/#| /g,'_');
+
+                };
+            },
+            listgroup(){
+                this.loadlist();
+                this.mode='list';
+
+            },
+            clickCallback(pageNum){
+                this.loadlist(pageNum);
+            },
+            edit(i){
+                let that=this;
+                this.resetform();
+                this.$axios.get(this.$url+'user/pgroup/'+i,{
+
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function(res){
+                    that.group=res.data;
+                    that.tags=that.taggenerator;
+                    that.attrs=that.attrgenerator;
+                    that.feas=that.feasgenerator;
+
+                    that.mode='add';
+                })
+
+            },
+            loadattr(){
+                let that=this;
+                this.$axios.get(this.$url+'user/Feature',{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function(res){
+                    that.fealist=res.data;
+                });
+                this.$axios.get(this.$url+'user/Attrprodcut',{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function(res){
+                    that.Attrlist=res.data;
+                });
+                this.$axios.get(this.$url+'user/color',{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function(res){
+                    that.color=res.data;
+                });
+                this.$axios.get(this.$url+'user/Tag',{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function(res){
+                    that.taglist=res.data;
+                });
+            },
+            loadlist(page=1){
+
+                let that=this;
+                this.$axios.get(this.$url+'user/pgroup',{
+                    params: {
+                        page: page,
+                        sub:this.sub
+                    },
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function(res){
+                    that.list=res.data;
+                })
+                    .catch((error) => {
+                        that.error = error.response.data.errors;
+
+                    });
+            }
+
+        },
+        mounted() {
+            this.mode='list';
+            this.loadlist();
+            this.loadattr();
+
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

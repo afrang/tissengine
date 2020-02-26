@@ -1,6 +1,6 @@
 <template>
     <div class="container pt-4" dir="rtl">
-        <div class="text-right">
+        <div class="text-right wmaster">
             <h4 @click="loadgroup" v-text="$t('groupnamegallery')+': '+group.name"></h4>
             <hr>
             <span @click="additem" class="btn btn-success icofont-plus"></span>

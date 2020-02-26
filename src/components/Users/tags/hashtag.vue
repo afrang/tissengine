@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="container pt-4 text-right dir-rtl">
+    <div class="pt-4">
+        <div class="container pt-4 text-right dir-rtl wmaster">
             <h4 v-text="$t('hashtagmanager')"></h4>
             <hr>
             <a   class="badge p-2 m-1 badge-success text-right "  v-for="(item,index) in tag" :key="index" >

@@ -1,5 +1,6 @@
 <template>
-    <div class="container text-right" dir="rtl">
+    <div class="container text-right pt-5  " dir="rtl">
+        <div class="wmaster ">
         <div class="right text-right pt-4">
             <h4 @click="loadmodel" v-text="$t('feature')"></h4>
             <a @click="loadlist" class="btn btn-primary text-white m-2 icofont-list"> <span v-text="$t('List')"></span> </a>
@@ -152,6 +153,7 @@
             </form>
 
         </template>
+        </div>
     </div>
 </template>
 
