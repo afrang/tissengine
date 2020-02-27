@@ -143,6 +143,7 @@ module.exports = {
     The_urlname_has_already_been_taken : 'url تکراری می باشد',
     Search : 'جستجو',
     description : 'توضیحات',
+    Haveasubsetcantdelete : 'دارای زیر مجموعه می باشد. نمی توان پاک نمود.',
     title : 'تیتر',
     featureandAttributes : 'مشخصات و ویژگی ها',
     webname : 'نام وب سایت',
@@ -165,4 +166,6 @@ module.exports = {
     groupnamegallery : 'نام گروه گالری',
     The_groups_field_is_required : 'گروه را انتخاب نمایید',
     imagemanager : 'مدیریت تصاویر',
+    thump : 'عکس',
+    seotext : 'متن سئو',
 }

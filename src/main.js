@@ -31,7 +31,6 @@ Vue.component('v-select', vSelect);
 
 import 'vue-phone-number-input/dist/vue-phone-number-input.css';
 import './assets/asset/main.css';
-
 import fa from './lang/fa/website'
 import en from './lang/en/website'
  // Pages

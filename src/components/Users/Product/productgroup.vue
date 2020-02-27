@@ -5,8 +5,8 @@
             <hr>
             <a @click="add" class="btn btn-success icofont-ui-add p-3 text-white"></a>
             <a @click="listgroup" class="btn btn-success icofont-listing-box  mr-4 p-3 text-white"></a>
+            <a v-if="pages.length!=1" @click="topitem(prev)" class="btn btn-success icofont-arrow-up  mr-4 p-3 text-white"></a>
             <hr>
-            <pre>{{ mode }}</pre>
             <template v-if="mode=='list'">
                 <table class="table table-striped" dir="rtl">
                     <thead>
@@ -14,6 +14,8 @@
                         <th scope="col">#</th>
                         <th scope="col" v-text="$t('name')"></th>
                         <th scope="col"  v-text="$t('url')"></th>
+                        <th scope="col"  v-text="$t('up')"></th>
+                        <th scope="col"  v-text="$t('down')"></th>
                         <th  class="text-center" scope="col" v-text="$t('edit')"></th>
                         <th class=" text-center"   scope="col"  v-text="$t('sub')"></th>
                         <th class="text-center" scope="col"  v-text="$t('del')"></th>
@@ -24,9 +26,11 @@
                         <th scope="row" v-text="index+1"></th>
                         <td v-text="item.name"></td>
                         <td v-text="item.url"></td>
+                        <td @click="uped(item.id)" class="icofont-arrow-up"></td>
+                        <td @click="downed(item.id)"  class="icofont-arrow-down  "></td>
                         <td @click="edit(item.id)" class="text-center"><span class="icofont icofont-edit-alt"></span></td>
-                        <td @click="edit(item.id)" class="text-center"><span class="icofont icofont-sub-listing"></span></td>
-                        <td @click="remove(item.id)" class="text-center"><span class="icofont icofont-delete-alt"></span></td>
+                        <td @click="subitem(item.id)" class="text-center"><span class="icofont icofont-sub-listing"></span></td>
+                        <td @click="removeitem(item.id)" class="text-center"><span class="icofont icofont-delete-alt"></span></td>
                     </tr>
                     </tbody>
                 </table>
@@ -71,6 +75,18 @@
                             <div class="form-group col-sm-12 col-xs-12">
                                 <label v-text="$t('description')"></label>
                                 <textarea   type="text" v-model="group.description" class="form-control"  :placeholder="$t('description')"></textarea>
+                                <small  class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group col-sm-12 col-xs-12">
+                                <label v-text="$t('color')"></label>
+                                <multiselect
+                                        @tag="addTag"
+                                        v-model="colorselect"
+                                        :multiple="true"
+                                        :taggable="true"
+                                        label="name"
+                                        track-by="code"
+                                        :options="color"></multiselect>
                                 <small  class="form-text text-muted"></small>
                             </div>
                             <div class="form-group col-sm-12 col-xs-12">
@@ -150,10 +166,10 @@
 
                         </div>
                     </div>
-                    <showerror :errors="error"></showerror>
                 </form>
             </template>
         </div>
+        <showerror :errors="error"></showerror>
 
 
     </div>
@@ -167,17 +183,19 @@
     import Paginate from 'vuejs-paginate'
     import FileUploader from "../../Custom/FileUploader";
     import Tisseditor from "../../Custom/Tisseditor";
+        import Multiselect from 'vue-multiselect';
 
     import Showerror from "../../Custom/Showerror";
     export default {
         name: "productgroup",
-        components: {Showerror,Paginate,Tisseditor,FileUploader,VueTagsInput},
+        components: {Showerror,Paginate,Tisseditor,FileUploader,VueTagsInput,Multiselect},
         data(){
             return{
                 sub:0,
-
+                prev:0,
+                pages:[0],
                 mode:null,
-
+                colorselect:[],
                 error:[],
                 group:{
                     id:null,
@@ -195,6 +213,7 @@
                 },
                 list:[],
                 color:[],
+                options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
 
 
                 Attrlist:[],
@@ -211,6 +230,7 @@
             }
         },
         computed: {
+
             filteredItems() {
                 return this.autocompleteItems.filter(i => {
                     return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
@@ -238,6 +258,7 @@
                     return i.text;
                 });
             },
+
             autocompleteItemsfeas(){
                 let b=[];
                 this.fealist.forEach(function (item) {
@@ -277,6 +298,33 @@
             }
         },
         methods:{
+            topitem(id){
+
+              let last=this.pages[this.pages.length - 2];
+              this.sub=last;
+              this.pages.pop();
+                this.loadlist();
+
+            },
+            subitem(id){
+                this.prev=this.sub;
+                this.sub=id;
+                this.pages.push(id);
+
+                this.loadlist();
+            },
+            customLabel({name,code}){
+                return `${name}`;
+
+            },
+            addTag (newTag) {
+                const tag = {
+                    name: newTag,
+                    code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+                }
+                this.options.push(tag)
+                this.value.push(tag)
+            },
             resetform(){
                 this.group={
                     id:null,
@@ -307,6 +355,8 @@
             save(){
                 let that=this;
                 if(this.group.id==null){
+                    this.group.sub=that.sub;
+
                     this.$axios.post( this.$url+'user/pgroup',
                         this.group,
                         {
@@ -326,6 +376,8 @@
                     this.group.tag=JSON.stringify(this.tags);
                     this.group.fea=JSON.stringify(this.feas);
                     this.group.attrs=JSON.stringify(this.attrs);
+                    this.group.color=JSON.stringify(this.colorselect);
+                    this.group.sub=that.sub;
                     this.$axios.put( this.$url+'user/pgroup/'+this.group.id,
                         this.group,
                         {
@@ -372,7 +424,7 @@
                     that.tags=that.taggenerator;
                     that.attrs=that.attrgenerator;
                     that.feas=that.feasgenerator;
-
+                    that.colorselect=res.data.to_color;
                     that.mode='add';
                 })
 
@@ -408,13 +460,30 @@
                     that.taglist=res.data;
                 });
             },
+            removeitem(id){
+                let that=this;
+                this.$axios.delete(this.$url+'user/pgroup/'+id,{
+                    params:{
+                        id:id
+                    },
+                      headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function(res){
+                    that.loadlist();
+                })
+                    .catch((error) => {
+                        that.error = error.response.data.errors;
+
+                    });
+            },
             loadlist(page=1){
 
                 let that=this;
                 this.$axios.get(this.$url+'user/pgroup',{
                     params: {
                         page: page,
-                        sub:this.sub
+                        sub:that.sub
                     },
                     headers: {
                         Authorization:localStorage.token
@@ -426,8 +495,35 @@
                         that.error = error.response.data.errors;
 
                     });
-            }
+            },
+            uped(e){
+                let that=this;
+                this.$axios.get(this.$url+'user/pgroupDetailup/'+e,
+                    {
+                        headers: {
+                            Authorization: localStorage.token
+                        }
+                    })
+                    .then(function(res){
+                        that.loadlist();
 
+
+                    });
+            },
+            downed(e){
+                let that=this;
+                this.$axios.get(this.$url+'user/pgroupDetailup/'+e,
+                    {
+                        headers: {
+                            Authorization: localStorage.token
+                        }
+                    })
+                    .then(function(res){
+                        that.loadlist();
+
+
+                    });
+            },
         },
         mounted() {
             this.mode='list';
@@ -437,7 +533,8 @@
         }
     }
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
-<style scoped>
+<style  scoped>
 
 </style>
