@@ -59,6 +59,7 @@
     import Attributes from "./attr/Attributes";
     import color from "./attr/color";
     import productgroup from "./Product/productgroup";
+    import product from "./Product/productdetail";
     export default {
             name: "Dashboard",
         components: {
@@ -79,7 +80,8 @@
             feature,
             Attributes,
             color,
-            productgroup
+            productgroup,
+            product
         },
         data(){
             return{

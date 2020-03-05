@@ -61,12 +61,101 @@
                             <input   type="text" v-model="group.url" class="form-control"  :placeholder="$t('url')">
                             <small  class="form-text text-muted"></small>
                         </div>
+
+
                         <template v-if="group.id!=null">
                             <div class="form-group col-sm-6 col-xs-12">
                                 <label v-text="$t('title')"></label>
                                 <input   type="text" v-model="group.title" class="form-control"  :placeholder="$t('title')">
                                 <small  class="form-text text-muted"></small>
                             </div>
+                            <div class="form-group col-sm-6 col-xs-12">
+                                <label v-text="$t('pricemode')"></label>
+                                <select class="form-control" v-model="group.pricemode">
+                                    <option v-for="(item,index) in pricemode" :key="index" :value="index" v-text="item.name"></option>
+                                </select>
+                                <small  class="form-text text-muted"></small>
+                            </div>
+                            <template v-if="group.pricemode==2">
+                                <div class="col-sm-3 col-xs-12" dir="ltr">
+                                    <label class="sr-only" v-text="$t('minwidth')" ></label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span class="icofont icofont-text-width"></span> | {{ $t('minwidth')    }}
+                                            </div>
+                                        </div>
+                                        <input type="text" v-model="group.minwidth" class="form-control"  >
+                                        <small  class="form-text text-muted" v-text="$t('CM')"></small>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-12" dir="ltr">
+                                    <label class="sr-only" v-text="$t('maxwidth')" ></label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span class="icofont icofont-maximize"></span> | {{ $t('maxwidth')    }}
+                                            </div>
+                                        </div>
+                                        <input type="text" v-model="group.maxwidth" class="form-control"  >
+                                        <small  class="form-text text-muted" v-text="$t('CM')"></small>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-12" dir="ltr">
+                                    <label class="sr-only" v-text="$t('minheight')" ></label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span class="icofont icofont-text-height"></span> | {{ $t('minheight')    }}
+                                            </div>
+                                        </div>
+                                        <input type="text" v-model="group.minheight" class="form-control"  >
+                                        <small  class="form-text text-muted" v-text="$t('CM')"></small>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-xs-12" dir="ltr">
+                                    <label class="sr-only" v-text="$t('maxheight')" ></label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span class="icofont icofont-maximize"></span> | {{ $t('maxheight')    }}
+                                            </div>
+                                        </div>
+                                        <input type="text" v-model="group.maxheight" class="form-control"  >
+                                        <small  class="form-text text-muted" v-text="$t('CM')"></small>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xs-12" dir="ltr">
+                                    <label class="sr-only" v-text="$t('arealimit')" ></label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span class="icofont icofont-text-width"></span> | {{ $t('arealimit')    }}
+                                            </div>
+                                        </div>
+                                        <input type="text" v-model="group.arealimit" class="form-control">
+                                        <small  class="form-text text-muted" v-text="$t('CM')"></small>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-xs-12" dir="ltr">
+                                    <label class="sr-only" v-text="$t('areaerror')" ></label>
+                                    <div class="input-group mb-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <span class="icofont icofont-maximize"></span> | {{ $t('areaerror')    }}
+                                            </div>
+                                        </div>
+                                        <textarea type="text" v-model="group.areaerror" class="form-control text-right"></textarea>
+
+                                    </div>
+                                </div>
+
+                            </template>
                             <div class="form-group col-sm-12 col-xs-12">
                                 <label v-text="$t('keywords')"></label>
                                 <textarea   type="text" v-model="group.keywords" class="form-control"  :placeholder="$t('keywords')"></textarea>
@@ -197,20 +286,36 @@
                 mode:null,
                 colorselect:[],
                 error:[],
-                group:{
-                    id:null,
-                    name:null,
-                    sub:0,
-                    url:null,
-                    menuitem:1,
-                    keywords:null,
-                    description:null,
-                    text:null,
-                    seotext:null,
-                    icon:null,
-                    thump:null,
-                    title:null,
+                group: {
+                    id: null,
+                    name: null,
+                    sub: 0,
+                    url: null,
+                    menuitem: 1,
+                    keywords: null,
+                    description: null,
+                    text: null,
+                    seotext: null,
+                    icon: null,
+                    thump: null,
+                    title: null,
+                    pricemode: 1,
+                    minwidth: 100,
+                    maxwidth: 500,
+                    minheight: 500,
+                    maxheight: 500,
+                    arealimit: 50,
+                    areaerror: null,
                 },
+                pricemode:{
+                    1:{
+                        name:this.$t('normal')
+                    },
+                    2:{
+                        name:this.$t('metterbase')
+                    }
+                },
+
                 list:[],
                 color:[],
                 options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
@@ -253,7 +358,6 @@
             },
 
             filteredItemsfeas() {
-                console.log(this.autocompleteItemsfeas);
                 return this.autocompleteItemsfeas.filter(i => {
                     return i.text;
                 });
@@ -391,7 +495,6 @@
                     })
                         .catch((error) => {
                             that.error = error.response.data.errors;
-
                         });
 
                 }
