@@ -36,7 +36,6 @@
            </template>
            <template v-if="mode=='edit'">
 
-               <pre>Fuck Day</pre>
                <form @submit.prevent="save" class="row">
 
                    <div class="form-group col-sm-6 col-xs-12">
@@ -173,22 +172,76 @@
 
                                </p>
                            </div>
+
                            <div id="menu2" class="container tab-pane fade"><br>
-                               <h3 v-text="$t('feature')"></h3>
+                               <h3 v-text="$t('fatureandprice')"></h3>
+                               <label v-text="$t('price')"></label>
+                               <money dir="ltr"  class="form-control" v-model="price" v-bind="money"></money>
+                               <label v-text="$t('pricediscount')"></label>
+                               <money dir="ltr"  class="form-control" v-model="discount" v-bind="money"></money>
+                               <input type="button" class="btn btn-primary mt-4" @click="newpricesubmit" :value="$t('save')">
+
                                <hr>
                                <div class="container">
-                                   dlfhds
-                               </div>
+                                   <h4 v-text="$t('baseprice')"></h4>
+                                   <div v-for="(item,index) in product.to_group.to_attr" :key="index" class="form-group col-sm-12 col-xs-12">
+                                       <label>{{ item.name }}</label>
+                                       <template v-if="item.mode==1">
+                                       <input @blur="textfea(item.id)" v-model="attr[item.id]" :ref="'fate'+item.id" class="form-control" type="text" >
+                                   </template>
+                                       <template v-if="item.mode==2">
+                                           <input @blur="textfea(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" type="number" min="1" >
+                                       </template>
+                                       <template v-if="item.mode==3">
+                                           <select  @blur="textfea(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" >
+                                               <option value="1" v-text="$t('yes')"></option>
+                                               <option value="0" v-text="$t('no')"></option>
+                                           </select>
+                                       </template>
+                                       <template v-if="item.mode==4">
+                                           <div :ref="'attr'+item.id" >
+                                               <template v-for="(opt,inx) in item.to_options"   >
+                                                   <div   :key="inx">
+                                                       <div class="row">
+                                                       <div class="col-sm-6 col-xs-12">
+                                                           <div class="mychecker" dir="rtl">
+                                                               <label>
+                                                                   <input   :ref="'opt'+opt.id" v-model="optionattr[opt.id]"    :value="opt.id"  type="checkbox"  >
+                                                                   <span class="checkmark"></span>
+                                                                   <span v-text="opt.name"></span></label>
+                                                           </div>
+                                                           <input type="button" class="btn btn-primary" :value="$t('save')">
+                                                       </div>
+                                                       <div class="col-sm-6 col-xs-12">
+                                                           <label v-text="$t('price')"></label>
+                                                           <money dir="ltr"  class="form-control"  v-bind="money"></money>
+                                                           <label v-text="$t('pricediscount')"></label>
+                                                           <money dir="ltr"  class="form-control"  v-bind="money"></money>
+
+                                                       </div>
+                                                   </div>
+                                                   <hr>
+                                                   </div>
+
+
+
+                                               </template>
+                                           </div>
+                                       </template>
+                                       <hr>
+                                   </div>
+
+                                   </div>
                            </div>
                            <div id="menu3" class="container tab-pane fade"><br>
-                               <h3 v-text="$t('attr')"></h3>
+                               <h3 v-text="$t('feature')"></h3>
                                <hr>
                                <div class="container">
                                    <div v-for="(item,index) in product.to_group.to_feature" :key="index" class="form-group col-sm-12 col-xs-12">
                                        <label>{{ item.name }}</label>
                                        <template v-if="item.mode==1">
-                                       <input @blur="textattr(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" type="text" >
-                                   </template>
+                                           <input @blur="textattr(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" type="text" >
+                                       </template>
                                        <template v-if="item.mode==2">
                                            <input @blur="textattr(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" type="number" min="1" >
                                        </template>
@@ -200,15 +253,20 @@
                                        </template>
                                        <template v-if="item.mode==4">
                                            <div :ref="'attr'+item.id" >
-                                               <div v-for="(opt,inx) in item.to_options" :key="inx" class="checkbox ">
-                                                   <label><input   @blur="optionsattr(item.id)" v-model="optionsattr[opt.id]"  @change="checkboxattr(opt.id)"   :true-value="opt.id" :false-value="false" type="checkbox"  ><span v-text="opt.name"></span></label>
+                                               <pre>{{ attr[item.id] }}</pre>
+                                               <div v-for="(opt,inx) in item.to_options" :key="inx" class="mychecker" dir="rtl">
+                                                   <label>
+                                                       <input   :ref="'opt'+opt.id" v-model="optionsattr[opt.id]"  @change="clickoptattr(opt.id,item.id)"   :value="opt.id"  type="checkbox"  >
+                                                       <span class="checkmark"></span>
+
+                                                       <span v-text="opt.name"></span></label>
                                                </div>
                                            </div>
                                        </template>
                                        <hr>
                                    </div>
 
-                                   </div>
+                               </div>
                            </div>
                            <div id="review" class="container tab-pane fade"><br>
 
@@ -232,7 +290,6 @@
                        <input type="submit" class="btn btn-primary" :value="$t('save')">
                    </div>
                </form>
-               <pre>{{ attr }}</pre>
 
            </template>
        </div>
@@ -244,19 +301,34 @@
     import Showerror from "../../Custom/Showerror";
     import Tisseditor from "../../Custom/Tisseditor";
     import FileUploader from "../../Custom/FileUploader";
+    import {Money} from 'v-money';
 
     export default {
         name: "productdetail.vue",
         components:{
             Showerror,
             Tisseditor,
-            FileUploader
+            FileUploader,
+            Money
         },
         data() {
             return {
+                money: {
+                    decimal: ',',
+                    thousands: '.',
+                    prefix: '',
+                    suffix: '',
+                    precision: 0,
+                    masked: false
+                },
+                price:0,
+                discount:0,
                 mode:'edit',
                 group:[],
                 attr:[],
+                fea:[],
+                optionsfea:[],
+                optionattr:[],
                 error:null,
                 listitems:[],
                 optionsattr:[],
@@ -291,15 +363,38 @@
         watch: {
             product:function (data) {
                 let that=this;
-                data.to_attr.filter(function (attr) {
-                   that.attr[attr.attr]=attr.value;
 
-                })
-                console.log('fuckday');
+                    data.to_attr.filter(function (attr) {
+                        if(attr.value=='options'){
+                            attr.to_option_value.filter(function (opt){
+                                that.optionsattr[opt.attr]=opt.value;
+                            });
+                        }else{
+                            that.attr[attr.attr]=attr.value;
+                        }
+
+
+                    })
+
+
+
             }
         },
 
         methods:{
+            newpricesubmit(){
+                let data={
+                    id:this.product.id,
+                    price:this.price,
+                    discount:this.discount
+                };
+                console.log(data);
+                this.$axios.post(this.$url+'user/pprice',data, {
+                    headers: {
+                        Authorization: localStorage.token
+                    }
+                });
+            },
             // Attr Controller
             resetform(){
               this.product={
@@ -309,12 +404,44 @@
                   parent:null
               }
             },
+            clickoptattr(id,parent){
 
+                let data={
+                    attr:parent,
+                    options:id,
+                    product:this.product.id
+                };
+
+               if(this.$refs['opt'+id][0]['checked']==true){
+                    data.value=1;
+                }else{
+                   data.value=0;
+               }
+
+                this.$axios.post(this.$url+'user/popt',data, {
+                    headers: {
+                        Authorization: localStorage.token
+                    }
+                });
+            },
             checkboxattr(id){
                 console.log(this.attr[id]);
               /*  this.$refs['attr'+id][0]['children'].map(function (m) {
                     console.log(m);
                 })*/
+            },
+            textfea(id){
+
+        /*        let data={
+                    id:id,
+                    product:this.product.id,
+                    value:this.$refs['attr'+id][0]['value']
+                }
+                this.$axios.post(this.$url+'user/pattr',data, {
+                    headers: {
+                        Authorization: localStorage.token
+                    }
+                });*/
             },
             textattr(id){
 
@@ -501,5 +628,72 @@
 </script>
 
 <style scoped>
+    /* The container */
+    .mychecker {
+        display: block;
+        position: relative;
+        padding-right: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 20px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        direction: rtl;
+    }
 
+    /* Hide the browser's default checkbox */
+    .mychecker input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .mychecker:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .mychecker input:checked ~ .checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .mychecker input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .mychecker .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
 </style>
