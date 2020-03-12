@@ -32,7 +32,7 @@
                               <span class="icofont icofont-fax"></span> | {{ $t('fax')    }}
                           </div>
                       </div>
-                      <input type="text" v-model="contacus.facbook" class="form-control"  placeholder="+98">
+                      <input type="text" v-model="contacus.fax" class="form-control"  placeholder="+98">
                   </div>
               </div>
               <div class="col-sm-6 col-xs-12">

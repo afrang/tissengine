@@ -232,7 +232,7 @@
                                 <file-uploader
                                         :key="1"
                                         mode="GroupProduct"
-                                        v-on:filename="'thump'"
+                                        v-on:filename="thumpsave"
                                         :id='group.id'
                                         name="thump"
                                         :file="group.thump"
@@ -455,6 +455,9 @@
                 this.resetform();
                 this.mode='add';
 
+            },
+            thumpsave(e){
+              this.group.thump=e;
             },
             save(){
                 let that=this;

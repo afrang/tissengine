@@ -60,6 +60,7 @@
     import color from "./attr/color";
     import productgroup from "./Product/productgroup";
     import product from "./Product/productdetail";
+    import firstpage from "./setting/firstpage";
     export default {
             name: "Dashboard",
         components: {
@@ -81,7 +82,8 @@
             Attributes,
             color,
             productgroup,
-            product
+            product,
+            firstpage
         },
         data(){
             return{

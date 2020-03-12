@@ -9,6 +9,7 @@ import Register from './components/Auth/Register'
 import Swal from 'sweetalert2'
 import Dashboard from './components/Users/Dashboard'
 import logout from './components/Auth/Logout'
+import firstpage from "./view/pages/firstpage";
 /* BLog Group */
 
 import VueSidebarMenu from 'vue-sidebar-menu'
@@ -48,19 +49,16 @@ import 'froala-editor/js/third_party/spell_checker.min';
 import 'froala-editor/js/third_party/image_tui.min';
 // Import Froala Editor css files.
 import 'froala-editor/css/froala_editor.pkgd.min.css';
+import 'vue-flux/dist-ssr/vue-flux.css';
 
 // Import and use Vue Froala lib.
 import VueFroala from 'vue-froala-wysiwyg'
 import VModal from 'vue-js-modal'
 
 Vue.use(VModal)
-
-
 Vue.use(VueFroala)
 Vue.config.productionTip = false
-
 const messages = {    'fa':fa,    'en': en};
-
 const i18n = new VueI18n({    locale: 'fa',messages});
 // this.$lang.setLang('fa');
 
@@ -89,7 +87,12 @@ const router=new  VueRouter({
             name:'logout',
             component:logout
         },
-
+        // View Routers
+        {
+            path:'/',
+            name:'firstpage',
+            component:firstpage
+        },
     ]
 })
 

@@ -62,7 +62,7 @@
                        </select>
                        <small  class="form-text text-muted"></small>
                    </div>
-                   <div class="container">
+                   <div class="container" v-if="product.id!=null">
                        <br>
                        <!-- Nav tabs -->
                        <ul class="nav nav-tabs" role="tablist">
@@ -363,7 +363,6 @@
         watch: {
             product:function (data) {
                 let that=this;
-
                     data.to_attr.filter(function (attr) {
                         if(attr.value=='options'){
                             attr.to_option_value.filter(function (opt){
@@ -396,14 +395,7 @@
                 });
             },
             // Attr Controller
-            resetform(){
-              this.product={
-                  id:null,
-                  name:null,
-                  url:null,
-                  parent:null
-              }
-            },
+
             clickoptattr(id,parent){
 
                 let data={
@@ -563,7 +555,17 @@
                 }
 
             },
+            resetform(){
+                this.product={
+                    id:null,
+                        name:null,
+                        url:null,
+                        parent:null
+                }
+            },
             add(){
+                this.resetform();
+                this.mode='edit';
 
             },
             edit(id){
