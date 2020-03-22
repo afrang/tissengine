@@ -16,6 +16,7 @@
                    <tr>
                        <th scope="col">#</th>
                        <th scope="col" v-text="$t('name')"></th>
+                       <th scope="col" v-text="$t('model')"></th>
                        <th scope="col" v-text="$t('group')"></th>
                        <th  class="text-center" scope="col" v-text="$t('action')"></th>
                    </tr>
@@ -24,6 +25,7 @@
                    <tr v-for="(item,index) in listitems.data"  :key="index">
                        <th scope="row" v-text="index+1"></th>
                        <td v-text="item.name"></td>
+                       <td v-text="item.model"></td>
                        <td v-text="item.group"></td>
                        <td class="text-center" >
                            <button  @click="edit(item.id)" class="btn btn-success icofont-ui-edit"></button>
@@ -130,8 +132,14 @@
                                    </div>
 
                                    <div class="form-group col-sm-12 col-xs-12">
-
-                                   <h3 v-text="$t('abstract')"></h3>
+                                       <vue-tags-input class="col-xs-12"
+                                                       :key="1"
+                                                       v-model="tag"
+                                                       :tags="tags"
+                                                       @tags-changed="newTags => tags = newTags"
+                                                       :autocomplete-items="filteredItems"
+                                       />
+                                       <h3 v-text="$t('abstract')"></h3>
                                    <p>
                                        <tisseditor  :key="1"  :text="product.morecomment" v-on:myevent="morecommentedit"   :mode="'Product'"></tisseditor>
                                    </p>
@@ -179,8 +187,10 @@
                                <money dir="ltr"  class="form-control" v-model="price" v-bind="money"></money>
                                <label v-text="$t('pricediscount')"></label>
                                <money dir="ltr"  class="form-control" v-model="discount" v-bind="money"></money>
-                               <input type="button" class="btn btn-primary mt-4" @click="newpricesubmit" :value="$t('save')">
+                               <label v-text="$t('percent')"></label>
+                               %  <input class="form-control w-25" type="number" min="0" max="100" v-model="percent">
 
+                               <input type="button" class="btn btn-primary mt-4" @click="newpricesubmit" :value="$t('save')">
                                <hr>
                                <div class="container">
                                    <h4 v-text="$t('baseprice')"></h4>
@@ -200,6 +210,7 @@
                                        </template>
                                        <template v-if="item.mode==4">
                                            <div :ref="'attr'+item.id" >
+                                               <pre>{{ pricelist }}</pre>
                                                <template v-for="(opt,inx) in item.to_options"   >
                                                    <div   :key="inx">
                                                        <div class="row">
@@ -222,9 +233,6 @@
                                                    </div>
                                                    <hr>
                                                    </div>
-
-
-
                                                </template>
                                            </div>
                                        </template>
@@ -301,6 +309,8 @@
     import Showerror from "../../Custom/Showerror";
     import Tisseditor from "../../Custom/Tisseditor";
     import FileUploader from "../../Custom/FileUploader";
+    import VueTagsInput from '@johmun/vue-tags-input';
+
     import {Money} from 'v-money';
 
     export default {
@@ -309,10 +319,13 @@
             Showerror,
             Tisseditor,
             FileUploader,
-            Money
+            Money,
+            VueTagsInput
         },
         data() {
             return {
+                tags:[],
+                tag:'',
                 money: {
                     decimal: ',',
                     thousands: '.',
@@ -321,9 +334,11 @@
                     precision: 0,
                     masked: false
                 },
+                taglist:null,
                 price:0,
                 discount:0,
                 mode:'edit',
+                pricelist:'',
                 group:[],
                 attr:[],
                 fea:[],
@@ -357,9 +372,7 @@
 
             }
         },
-        computed:{
 
-        },
         watch: {
             product:function (data) {
                 let that=this;
@@ -371,13 +384,37 @@
                         }else{
                             that.attr[attr.attr]=attr.value;
                         }
-
-
+                    });
+                    data.to_price.filter(function (attr) {
+                        if(attr.attr==0){
+                            that.price=attr.price;
+                            that.discount=attr.discount;
+                            that.percent=attr.percent;
+                        }
                     })
-
-
-
             }
+        },
+        computed:{
+            filteredItems() {
+                return this.autocompleteItems.filter(i => {
+                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+                });
+            },
+            autocompleteItems(){
+                let b=[];
+                this.taglist.forEach(function (item) {
+                    b.push({text:item.name});
+
+                });
+                return b;
+            },
+            taggenerator(){
+                let b=[];
+                this.product.to_tag.forEach(function(item){
+                    b.push(item.name);
+                });
+                return b;
+            },
         },
 
         methods:{
@@ -385,9 +422,10 @@
                 let data={
                     id:this.product.id,
                     price:this.price,
-                    discount:this.discount
+                    discount:this.discount,
+                    percent:this.percent,
+                    attr:0,
                 };
-                console.log(data);
                 this.$axios.post(this.$url+'user/pprice',data, {
                     headers: {
                         Authorization: localStorage.token
@@ -541,6 +579,8 @@
 
                 }
                 if(this.product.id!=null){
+                    this.product.tag=JSON.stringify(this.tags);
+
                     this.$axios.put(this.$url+'user/pdetail/'+this.product.id,this.product,{
                         headers: {
                             Authorization:localStorage.token
@@ -562,6 +602,9 @@
                         url:null,
                         parent:null
                 }
+                this.price=null;
+                this.discount=null;
+                this.percent=null;
             },
             add(){
                 this.resetform();
@@ -578,6 +621,8 @@
                 }).then(function(res){
                     that.product=res.data;
                     that.imagelist=res.data.to_image;
+                    that.tags=that.taggenerator;
+
                     that.mode='edit';
                  /**/
                 });
@@ -585,6 +630,13 @@
             listgroup(){
 
                 let that=this;
+                this.$axios.get(this.$url+'user/Tag',{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function(res){
+                    that.taglist=res.data;
+                });
                 this.$axios.get(this.$url+'user/pgroup/create',{
 
                     headers: {
@@ -625,6 +677,7 @@
                 this.mode='list';
                 this.listgroup();
                 this.listproduct();
+
         }
     }
 </script>

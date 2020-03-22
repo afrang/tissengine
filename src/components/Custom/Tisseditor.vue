@@ -13,7 +13,7 @@
                 </div>
                 <div class="modal-body">
                     <template v-if="code!=null">
-                    <div v-html="code"></div>
+                        <div v-html="code"></div>
                     </template>
                     <textarea v-model="code" class="form-control"></textarea>
 
@@ -26,28 +26,28 @@
         </modal>
         <modal   :key="keys"       height="auto" class="modal-dialog" role="document" name="aparat">
 
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            <span class="icofont-movie text-danger"></span><strong>APARAT</strong>
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <template v-if="aparat!=null">
-                            <div class="h_iframe-aparat_embed_frame"><span style="display: block;padding-top: 57%"></span><iframe :src="'https://www.aparat.com/video/video/embed/videohash/'+aparat+'/vt/frame'" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe></div>
-
-                        </template>
-                            <input v-model="aparat" class="form-control">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button @click="addaparat"  type="button" class="btn btn-primary">{{ $t('addtotext')}}</button>
-                        <button  @click="aparathide" type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('close') }}</button>
-                    </div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="icofont-movie text-danger"></span><strong>APARAT</strong>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <div class="modal-body">
+                    <template v-if="aparat!=null">
+                        <div class="h_iframe-aparat_embed_frame"><span style="display: block;padding-top: 57%"></span><iframe :src="'https://www.aparat.com/video/video/embed/videohash/'+aparat+'/vt/frame'" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe></div>
+
+                    </template>
+                    <input v-model="aparat" class="form-control">
+
+                </div>
+                <div class="modal-footer">
+                    <button @click="addaparat"  type="button" class="btn btn-primary">{{ $t('addtotext')}}</button>
+                    <button  @click="aparathide" type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('close') }}</button>
+                </div>
+            </div>
 
 
         </modal>
@@ -67,7 +67,7 @@
                             <div class="imginsert">
                                 <a class="badge badge-dark text-white">{{ item.ext }}</a>
 
-                                <img @click="insertimage('%url%'+'filemanager/'+item.file)" :src="$storage+'filemanager/'+item.file" class="w-100  h-100">
+                                <img @click="insertimage($storage+'filemanager/'+item.file)" :src="$storage+'filemanager/'+item.file" class="w-100  h-100">
                             </div>
                             <div>
 
@@ -86,33 +86,32 @@
                         <div class="col-sm-2 col-xs-12   text-center pt-5" :key="index">
                             <template v-if="item.mode=='archive'">
                                 <div class="">
-                                    <div @click="inserarchive('%url%'+'filemanager/'+item.file)" class="icofont-archive icofont-3x" ></div>
+                                    <div @click="inserarchive($storage+'filemanager/'+item.file)" class="icofont-archive icofont-3x" ></div>
 
                                 </div>
                             </template>
                             <template v-if="item.mode=='pdf'">
                                 <div class="">
-                                    <span   @click="inseerpdf('%url%'+'filemanager/'+item.file)" class="icofont-file-pdf icofont-3x" ></span>
+                                    <span   @click="inseerpdf($storage+'filemanager/'+item.file)" class="icofont-file-pdf icofont-3x" ></span>
                                 </div>
                             </template>
                             <template v-if="item.mode=='doc'">
                                 <div class="">
-                                    <span @click="insertdoc('%url%'+'filemanager/'+item.file)" class="icofont-file-word icofont-3x" ></span>
+                                    <span @click="insertdoc($storage+'filemanager/'+item.file)" class="icofont-file-word icofont-3x" ></span>
                                 </div>
                             </template>
                             <template v-if="item.mode=='powerpoint'">
                                 <div class="">
-                                    <span @click="insertslide('%url%'+'filemanager/'+item.file)" class="icofont-file-powerpoint icofont-3x" ></span>
+                                    <span @click="insertslide($storage+'filemanager/'+item.file)" class="icofont-file-powerpoint icofont-3x" ></span>
                                 </div>
                             </template>
                             <template v-if="item.mode=='otherfile'">
-                                <span   @click="insertotherfile('%url%'+'filemanager/'+item.file)" class="icofont-ui-file  icofont-3x" ></span>
+                                <span   @click="insertotherfile($storage+'filemanager/'+item.file)" class="icofont-ui-file  icofont-3x" ></span>
                             </template>
                             <template v-if="item.mode=='excel'">
-                                <span @click="insertexcel('%url%'+'filemanager/'+item.file)" class="icofont-file-excel  icofont-3x" ></span>
+                                <span @click="insertexcel($storage+'filemanager/'+item.file)" class="icofont-file-excel  icofont-3x" ></span>
                             </template>
                             <h6 class="mt-4">
-
                                 <a class="btn">{{ item.ext }}</a>
                                 <div>
                                     <a target="_blank" class="badge badge-dark " :href="$storage+'filemanager/'+item.file"><span class="icofont-download"></span></a>
@@ -136,7 +135,8 @@
         <template v-if="showeditors==true">
 
         </template>
-        <froala id="edit" :key="keys" :tag="'textarea'"   :config="config" v-model="text"></froala>
+        <pre>{{ vtext }}</pre>
+        <froala id="edit" :key="keys" :tag="'textarea'"   :config="config" v-model="vtext"></froala>
 
         <a @click="apartshow" class="btn text-white btn-sm btn-dark m-1">{{ $t('Aparat')}} | <span class="icofont-ui-movie"></span>  </a>
         <a @click="codeshow"  class="btn  text-white btn-sm btn-dark m-1">{{ $t('embedcode')}} | <span class="icofont-code"></span> </a>
@@ -157,43 +157,43 @@
 
         computed: {
 
-                // a computed getter
-                files: function () {
-                    let item;
-                    let myobject=[];
-                    for(item in this.listfile){
-                          let model='otherfile';
-                        let mode=this.listfile[item].substr(this.listfile[item].lastIndexOf('.') + 1).toUpperCase();
-                        if( mode=='JPG' || mode=='BMP' || mode=='PNG' || mode=='JPEG' || mode=='TIFF'){
-                            model='pic';
-                        }
-                        if( mode=='PDF' ){
-                            model='pdf';
-                        }
-                        if( mode=='DOCX' || mode=='DOC' || mode=='ODT' || mode=='RTF' || mode=='TEXT' || mode=='TXT'  ){
-                            model='doc';
-                        }
-                        if( mode=='ZIP' || mode=='RAR' || mode=='7ZIP' || mode=='ISO'  ){
-                            model='archive';
-                        }
-                        if( mode=='PPTX' || mode=='PPT' || mode=='ODP' || mode=='PPS' || mode=='PPSX'  ){
-                            model='powerpoint';
-                        }
-                        if( mode=='XLSX' || mode=='XLS' || mode=='CSV' || mode=='ODS' || mode=='XLSB'  ){
-                            model='excel';
-                        }
-                        if( mode=='PUB'  ){
-                            model='publisher';
-                        }
-                        myobject.push({
-                            file:this.listfile[item],
-                            ext:mode,
-                            mode:model
-                        });
-
+            // a computed getter
+            files: function () {
+                let item;
+                let myobject=[];
+                for(item in this.listfile){
+                    let model='otherfile';
+                    let mode=this.listfile[item].substr(this.listfile[item].lastIndexOf('.') + 1).toUpperCase();
+                    if( mode=='JPG' || mode=='BMP' || mode=='PNG' || mode=='JPEG' || mode=='TIFF'){
+                        model='pic';
                     }
-                    return myobject;
+                    if( mode=='PDF' ){
+                        model='pdf';
+                    }
+                    if( mode=='DOCX' || mode=='DOC' || mode=='ODT' || mode=='RTF' || mode=='TEXT' || mode=='TXT'  ){
+                        model='doc';
+                    }
+                    if( mode=='ZIP' || mode=='RAR' || mode=='7ZIP' || mode=='ISO'  ){
+                        model='archive';
+                    }
+                    if( mode=='PPTX' || mode=='PPT' || mode=='ODP' || mode=='PPS' || mode=='PPSX'  ){
+                        model='powerpoint';
+                    }
+                    if( mode=='XLSX' || mode=='XLS' || mode=='CSV' || mode=='ODS' || mode=='XLSB'  ){
+                        model='excel';
+                    }
+                    if( mode=='PUB'  ){
+                        model='publisher';
+                    }
+                    myobject.push({
+                        file:this.listfile[item],
+                        ext:mode,
+                        mode:model
+                    });
+
                 }
+                return myobject;
+            }
 
         },
         name: "Tisseditor",
@@ -228,12 +228,13 @@
 
         },
         watch: {
-            text:function (val) {
-                this.$emit('myevent', val);
+            vtext:function (val) {
+                this.$emit('myevent', val.replace(this.$storage,'%url%'));
             }
         },
-            data() {
+        data() {
             return {
+                vtext:null,
                 aparat:null,
                 code:null,
                 listfile:{},
@@ -253,7 +254,7 @@
                     },
                     dictDefaultMessage:this.$t('uploadyourfile'),
                     headers: {
-                            Authorization: localStorage.token
+                        Authorization: localStorage.token
                     }
                 },
                 config: {
@@ -313,51 +314,46 @@
 
             },
             addcode(){
-                this.text=this.text+this.code;
+                this.vtext=this.vtext+this.code;
                 this.code=null;
                 this.codehide();
 
 
             },
             insertimage(item){
-             this.text=this.text+'<img  width="100%" src='+item+'>';
-             this.converttoUrladdress();
-             this.hide();
+                this.vtext=this.vtext+'<img  width="100%" src='+item+'>';
+
+
+                this.hide();
             },
             inserarchive(item){
-                this.text=this.text+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/zip.png"></a>';
-                this.converttoUrladdress();
+                this.vtext=this.vtext+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/zip.png"></a>';
                 this.hide();
             },
             insertslide(item){
-                this.text=this.text+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/powerpoint.png"></a>';
-                this.converttoUrladdress();
+                this.vtext=this.vtext+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/powerpoint.png"></a>';
                 this.hide();
             },
             insertexcel(item){
-                this.text=this.text+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/excel.png"></a>';
-                this.converttoUrladdress();
+                this.vtext=this.vtext+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/excel.png"></a>';
                 this.hide();
             },
             insertdoc(item){
-                this.text=this.text+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/word.png"></a>';
-                this.converttoUrladdress();
+                this.vtext=this.vtext+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/word.png"></a>';
                 this.hide();
             },
             addaparat(){
 
-                this.text=this.text+'<div class="h_iframe-aparat_embed_frame" style="height: 700px"><span style="display: block;padding-top: 57%"></span><iframe src="https://www.aparat.com/video/video/embed/videohash/'+this.aparat+'/vt/frame" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe></div>';
+                this.vtext=this.vtext+'<div class="h_iframe-aparat_embed_frame" style="height: 700px"><span style="display: block;padding-top: 57%"></span><iframe src="https://www.aparat.com/video/video/embed/videohash/'+this.aparat+'/vt/frame" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe></div>';
                 this.aparathide();
             },
             insertotherfile(item){
-                this.text=this.text+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/other.png"></a>';
-                this.converttoUrladdress();
+                this.vtext=this.vtext+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/other.png"></a>';
                 this.hide();
 
             },
             inseerpdf(item){
-                this.text=this.text+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/pdf.png"></a>';
-                this.converttoUrladdress();
+                this.vtext=this.vtext+'<a href='+item+'><img  width="50px" src="'+this.$storage+'asset/icon/pdf.png"></a>';
                 this.hide();
             },
             detitem(item){
@@ -386,25 +382,31 @@
                 })
                     .then(function (response) {
 
-                    that.listfile=response.data;
-                });
+                        that.listfile=response.data;
+                    });
 
-                }
-            },
-            mounted() {
-                //this.show();
-                this.showitem();
+            }
+        },
+        mounted() {
+            //this.show();
+            this.showitem();
 
+
+
+        },
+        beforeUpdate: function () {
+            if(this.vtext==null){
+                this.vtext=this.text.replace('%url%',this.$storage);
+            }
 
         }
-
 
     }
 </script>
 
 <style scoped>
-.v--modal{
-    width: 100%;
-    overflow: scroll !important;
-}
+    .v--modal{
+        width: 100%;
+        overflow: scroll !important;
+    }
 </style>

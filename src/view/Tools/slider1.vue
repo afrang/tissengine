@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" >
+        <div :id="name" class="carousel slide" data-ride="carousel" >
             <ol class="carousel-indicators" >
-                <li data-target="#carouselExampleIndicators" v-for="(item,inx) in slider.todetail" :key="inx" :data-slide-to="inx" :class="active(inx)">2</li>
+                <li :data-target="'#'+name" v-for="(item,inx) in slider.todetail" :key="inx" :data-slide-to="inx" :class="active(inx)">2</li>
 
             </ol>
             <div class="carousel-inner">
@@ -11,11 +11,11 @@
                 </div>
 
             </div>
-            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <a class="carousel-control-prev" :href="'#'+name" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
             </a>
-            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <a class="carousel-control-next" :href="'#'+name" role="button" data-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
@@ -29,12 +29,17 @@
         props:{
             name:{
                 type:String,
+                default:null
 
             },
             height:{
                 type:String,
                 default: '800px'
 
+            },
+            id:{
+                type:String,
+                default: null
             }
         },
         data(){
@@ -52,7 +57,8 @@
                 let that=this;
                 this.$axios.get(this.$url+'slider',{
                     params:{
-                        url:this.name
+                        url:this.name,
+                        id:this.id,
                     }
                 }).then(function (res) {
                     that.slider=res.data;

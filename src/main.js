@@ -10,6 +10,7 @@ import Swal from 'sweetalert2'
 import Dashboard from './components/Users/Dashboard'
 import logout from './components/Auth/Logout'
 import firstpage from "./view/pages/firstpage";
+
 /* BLog Group */
 
 import VueSidebarMenu from 'vue-sidebar-menu'
@@ -22,6 +23,8 @@ Vue.use(VueAxios, axios)
 Vue.use(VueRouter);
 Vue.use(Showerror);
 Vue.use(VueSidebarMenu);
+Vue.use(require('vue-jalali-moment'));
+
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 import 'vue-select/dist/vue-select.css';
 require('bootstrap');
@@ -32,6 +35,8 @@ Vue.component('v-select', vSelect);
 
 import 'vue-phone-number-input/dist/vue-phone-number-input.css';
 import './assets/asset/main.css';
+import 'swiper/css/swiper.css'
+
 import fa from './lang/fa/website'
 import en from './lang/en/website'
  // Pages
@@ -49,7 +54,8 @@ import 'froala-editor/js/third_party/spell_checker.min';
 import 'froala-editor/js/third_party/image_tui.min';
 // Import Froala Editor css files.
 import 'froala-editor/css/froala_editor.pkgd.min.css';
-import 'vue-flux/dist-ssr/vue-flux.css';
+import VueCarousel from 'vue-carousel';
+Vue.use(VueCarousel);
 
 // Import and use Vue Froala lib.
 import VueFroala from 'vue-froala-wysiwyg'

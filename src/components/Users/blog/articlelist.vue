@@ -85,7 +85,9 @@
                     </div>
                     <hr>
                     <template v-if="blog.id">
-                        <tisseditor  :text="blog.text"
+                        <tisseditor
+                                :id="blog.id"
+                                :text="blog.text"
                                      v-on:myevent="doSomething"
                                      :mode="'Blog'"></tisseditor>
                         <label v-text="$t('keywords')"></label>

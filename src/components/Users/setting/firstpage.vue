@@ -16,6 +16,7 @@
                     <label v-text="$t('OffSectionSlider')"></label>
                     <v-select  @input="pluskeycomponent()"  dir="rtl" v-model="mydata.offsliders.data"  :options="sliders" label="name" ></v-select>
                     <template v-if="mydata.offsliders.data!=null">
+                        <pre>{{ mydata.offsliders.data.urlname }}</pre>
                         <slider1   height="200px"  :key="kecomponent" :name="mydata.offsliders.data.urlname"></slider1>
 
                     </template>
@@ -30,6 +31,15 @@
                                 name="img1"
                                 :file="mydata.img1.data"
                         ></file-uploader>
+                        <date-picker v-model="mydata.counter2.start"  type="datetime" :label="$t('start')" />
+
+                        <date-picker v-model="mydata.counter2.end"  type="datetime" :disabled="!mydata.counter2.start" :min="mydata.counter2.start">
+                            <div slot="label">
+                                <span v-text="$t('end')"></span>
+                            </div>
+                        </date-picker>
+                        <span :title="$t('cleattime')" @click="mydata.counter2.start=null,mydata.counter2.end=null" class="icofont-eraser"></span>
+
                         <input type="text" v-model="mydata.urlbox1.data" class="form-control" placeholder="url">
                     </div>
                     <div class="col-sm-6">
@@ -41,9 +51,26 @@
                                 name="img2"
                                 :file="mydata.img2.data"
                         ></file-uploader>
+                        <date-picker v-model="mydata.counter.start"   type="datetime" :label="$t('start')" />
+
+                        <date-picker v-model="mydata.counter.end"   type="datetime" :disabled="!mydata.counter.start" :min="mydata.counter.start">
+                            <div slot="label">
+                                 <span v-text="$t('end')"></span>
+                            </div>
+                        </date-picker>
+                        <span :title="$t('cleattime')" @click="mydata.counter.start=null,mydata.counter.end=null" class="icofont-eraser red-tex"></span>
+
                         <input type="text" v-model="mydata.urlbox2.data" class="form-control" placeholder="url">
                     </div>
                 </div>
+                <div class="col-sm-12">
+                    <h4 v-text="$t('PrdocutSliderwithtags')"></h4>
+                    <hr>
+                    <select class="form-control" v-model="mydata.tagslider.data" >
+                        <option v-for="(data,index) in taglist" :key="index" :value="data.id" v-text="data.name"></option>
+                    </select>
+                </div>
+
                 <div class="col-sm-12">
                     <h4 v-text="$t('SpecailProdcut')"></h4>
                     <hr>
@@ -206,7 +233,6 @@
 
         </div>
 
-
     </div>
 </template>
 
@@ -214,16 +240,19 @@
     import FileUploader from "../../Custom/FileUploader";
     import Tisseditor from "../../Custom/Tisseditor";
     import slider1 from "../../../view/Tools/slider1";
+    import VuePersianDatetimePicker from 'vue-persian-datetime-picker';
     export default {
         name: "firstpage",
         components: {
-            FileUploader,Tisseditor,slider1
+            FileUploader,Tisseditor,slider1,
+            datePicker: VuePersianDatetimePicker
         },
         data() {
             return {
                 kecomponent:0,
                 rawdata:{},
                 modelpage:'firstpage',
+                taglist:null,
                 mydata:{
 
                     mode:'firstpage',
@@ -324,6 +353,21 @@
                         data:null,
                         mode:'img'
                     },
+                    tagslider:{
+                        data:null,
+                        mode:'tag'
+                    },
+
+                    counter:{
+                        start:null,
+                        end:null,
+                        mode:'timepicker'
+                    },
+                    counter2:{
+                        start:null,
+                        end:null,
+                        mode:'timepicker'
+                    },
                 },
                 sliders:{},
                 products:{},
@@ -342,6 +386,13 @@
                             }
 
                         });
+                    }
+                    if(items.model=="timepicker"){
+                        that.mydata[items.name].start=items.text;
+                        that.mydata[items.name].end=items.image;
+                    }
+                    if(items.model=="tag"){
+                        that.mydata[items.name].data=items.image;
                     }
                     if(items.model=="img"){
                         that.mydata[items.name].data=items.image;
@@ -466,13 +517,23 @@
                         Authorization:localStorage.token
                     }
                 }).then(function (response) {
-                    that.$swal.fire($t('saved'))
+                    that.$swal.fire(that.$t('saved'));
                 });
 
+            },
+            loadtag(){
+                let that=this;
+                this.$axios.get(this.$url+'user/Tag',
+                    {headers:{Authorization:localStorage.token}}
+                ).then(function(res){
+                    that.taglist=res.data;
+
+                })
             }
         },
         mounted() {
             this.loadadata();
+            this.loadtag();
         }
     }
 </script>
