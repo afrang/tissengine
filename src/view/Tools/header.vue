@@ -149,7 +149,7 @@
                                                 <li v-for="(nav,index) in item.to_sub" :key="index">
                                                     <a :href="'/category/'+nav.url" class="mytext">
                                                         <span class="icofont-curved-left"></span>
-                                                        <h7 v-text="nav.name"></h7>
+                                                        <h6 v-text="nav.name"></h6>
                                                         <span class="badge badge-primary badge-pill"></span>
 
                                                     </a>

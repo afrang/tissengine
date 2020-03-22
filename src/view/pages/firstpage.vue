@@ -64,14 +64,41 @@
                 </div>
             </div>
         </div>
-        <carousel>
-            <slide>
-                Slide 1 Content
-            </slide>
-            <slide>
-                Slide 2 Content
-            </slide>
-        </carousel>
+        <template v-if="listspecial!=null">
+            <carousel :perPage="5">
+                <slide  v-for="(item,index) in listspecial.data" :key="index" class="m-1"  >
+                    <a class="removedecration" :href="'/product/'+item.url">
+                    <div class="card "  style="border-radius: 45px;" >
+                        <img  v-if="item.image!=null" class="card-img-top h400" :src="$storage+'media/Product/'+item.id+'/thump/'+item.image" :alt="item.name">
+                        <img  v-if="item.image==null"  class="card-img-top h400" src="/asset/icofont/nopic.png" :alt="item.name">
+                            <div class="card-text text-center tiss-thumpbox">
+                                <div class="row">
+                                    <div class="col-sm-12 text-right">
+                                        <span v-if="item.percent!=null" class="badge badge-danger float-left" v-text="item.percent+ '%'"></span>
+                                        <p v-text="item.group" class="yellowtext"></p>
+                                        <h5 class="m--4" dir="rtl"><span v-text="item.name" class="font-weight-bolder"></span> <small class="text-blue font-weight-bolder m--4" v-text="item.model"></small></h5>
+                                    </div>
+                                    <div class="col-sm-6 text-right myitems  redlies " >
+                                        <template v-if="item.price!=null">
+                                            <small v-text="$t('toman')"></small>
+                                            <vue-numeric dir="rtl" :read-only="true"  separator="," v-model="item.price"></vue-numeric>
+                                        </template>
+                                    </div>
+                                    <div class="col-sm-6 myitems text-right greentext">
+                                        <template v-if="item.discount!=null">
+                                        <small v-text="$t('toman')"></small>
+                                        <vue-numeric dir="rtl" :read-only="true"   class="mainprice"  separator="," v-model="item.discount"></vue-numeric>
+                                        </template>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    </a>
+                </slide>
+
+            </carousel>
+        </template>
+
         <div class="container">
             <div class=" row mt-3 productfirst">
                 <div class="col-sm-6 col-xs-12 text-center">
@@ -81,15 +108,25 @@
 
                         </div>
                         <div class="container">
-                            <div class="row mt-2 mypricespecial" >
+                            <div v-if="product.prs!=null" class="row mt-2 mypricespecial" >
                                 <div class="col-sm-6 text-left">
-                                    <p> 500000 <span v-text="$t('toman')"></span> </p>
+                                    <div class="col-sm-6 myitems text-right greentext">
+                                        <template v-if="product.prs.data.price!=null">
+                                            <small v-text="$t('toman')"></small>
+                                            <vue-numeric dir="rtl" :read-only="true"  separator="," v-model="item.price"></vue-numeric>
+                                        </template>
+                                        <template v-if="product.prs.data.discount!=null">
+                                            <small v-text="$t('toman')"></small>
+                                            <vue-numeric dir="rtl" :read-only="true"   class="mainprice"  separator="," v-model="product.prs.data.discount"></vue-numeric>
+                                        </template>
+                                    </div>
+
                                     <star-rating style="margin-top: -10px;" star-size="20" :glow="20" :round-start-rating="false"  :read-only="true" :show-rating="false" :rating="2.5" class="w-100"></star-rating>
 
                                 </div>
                                 <div class="col-sm-6 text-right" dir="rtl">
-                                    <h5>نمونه <small>5xe4</small></h5>
-                                    <p>گروه فلان </p>
+                                    <h5>{{ product.prs.data.name }} <small>{{ product.prs.data.model }}</small></h5>
+                                    <p>{{ product.prs.data.group }}</p>
                                 </div>
 
                             </div>
@@ -99,24 +136,31 @@
                 </div>
                 <div class="col-sm-6 col-xs-12">
                     <div class="row">
-                        <div class="col-sm-6" v-for="(n, index) in 4"  :key="index">
+                        <div class="col-sm-6"  v-for="(n, index) in 4"  :key="index">
+                            <template v-if="product['pr'+(index+1)]!=null" >
                             <div class="img-hover-zoom">
-                                <img :src="$storage+'media/firstpage/1/orginal/'+firsptagedata[8].image" height="320px;" class="w-100" style="border-radius: 5px;">
+
+                                <img  v-if="product['pr'+(index+1)].data.image!=null" height="320px;" class="w-100" style="border-radius: 5px;" :src="$storage+'media/Product/'+product['pr'+(index+1)].data.id+'/thump/'+product['pr'+(index+1)].data.image" :alt="product['pr'+(index+1)].data.name">
+                                <img  v-if="product['pr'+(index+1)].data.image==null"  height="320px;" class="w-100" style="border-radius: 5px;" src="/asset/icofont/nopic.png" :alt="product['pr'+(index+1)].data.name">
 
                             </div>
                             <div class="row mt-2 mypricespecial" >
-                                <div class="col-sm-6">
-                                    <p> 500000 <span v-text="$t('toman')"></span> </p>
+                                <div class="col-sm-4">
                                     <star-rating style="margin-top: -10px;" star-size="20" :glow="20" :round-start-rating="false"  :read-only="true" :show-rating="false" :rating="2.5" class="w-100"></star-rating>
 
+                                    <template v-if="product['pr'+(index+1)].data.price!=null">
+                                        <small v-text="$t('toman')"></small>
+                                        <vue-numeric dir="rtl" :read-only="true"  separator="," v-model="product['pr'+(index+1)].data.price"></vue-numeric>
+                                    </template>
+
                                 </div>
-                                <div class="col-sm-6 text-right" dir="rtl">
-                                    <h5>نمونه <small>5xe4</small></h5>
-                                    <p>گروه فلان </p>
+                                <div class="col-sm-8 text-right" dir="rtl">
+                                    <h5 >{{ product['pr'+(index+1)].data.name }} <small>{{ product['pr'+(index+1)].data.model }}</small></h5>
+                                    <p>{{ product['pr'+(index+1)].data.group }}</p>
                                 </div>
 
                             </div>
-
+                            </template>
                         </div>
 
                     </div>
@@ -124,8 +168,10 @@
                 </div>
             </div>
         </div>
+        <div @click="options">dsd</div>
+        <pre>{{ product }}</pre>
 
-        <pre>{{ firsptagedata[26] }}</pre>
+
     </div>
 </template>
 
@@ -136,6 +182,7 @@
     import countdown from "../Tools/countdown";
     import StarRating from 'vue-star-rating';
     import { Carousel, Slide } from 'vue-carousel';
+    import VueNumeric from 'vue-numeric';
 
 
 
@@ -148,14 +195,33 @@
             countdown,
             StarRating,
             Carousel,
-            Slide
+            Slide,
+            VueNumeric,
+
         },
         watch :{
 
         },
 
         data: () => ({
-                firsptagedata:{}
+                firsptagedata:{},
+            listspecial:null,
+            moneyslide:{
+                decimal: ',',
+                thousands: ',',
+                prefix:'تومان',
+                suffix: ' ',
+                precision: 0,
+                masked: false
+            },
+            product:{
+                prs:null,
+                pr1:null,
+                pr2:null,
+                pr2:null,
+                pr3:null
+
+            }
         }),
 
         methods:{
@@ -163,7 +229,62 @@
                 let that=this;
                 this.$axios.get(this.$url+'firstpage').then(function (res) {
                     that.firsptagedata=res.data;
-                })
+                    that.options();
+                });
+            },
+            options(){
+                let that=this;
+                this.$axios.get(this.$url+'searchproduct',{
+                    params: {
+                        tag:that.firsptagedata[26].image
+
+                    },
+                    headers:{Authorization:localStorage.token}
+                }).then(function (res) {
+                    that.listspecial=res.data;
+                });
+
+                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[17].image,{
+                    params: {
+
+                    },
+                    headers:{Authorization:localStorage.token}
+                }).then(function (res) {
+                    that.product.prs=res.data;
+                });
+
+                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[15].image,{
+                    params: {
+
+                    },
+                    headers:{Authorization:localStorage.token}
+                }).then(function (res) {
+                    that.product.pr1=res.data;
+                });
+                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[16].image,{
+                    params: {
+
+                    },
+                    headers:{Authorization:localStorage.token}
+                }).then(function (res) {
+                    that.product.pr2=res.data;
+                });
+                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[17].image,{
+                    params: {
+
+                    },
+                    headers:{Authorization:localStorage.token}
+                }).then(function (res) {
+                    that.product.pr3=res.data;
+                });
+                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[18].image,{
+                    params: {
+
+                    },
+                    headers:{Authorization:localStorage.token}
+                }).then(function (res) {
+                    that.product.pr4=res.data;
+                });
             }
         },
         mounted() {
@@ -173,16 +294,32 @@
 </script>
 
 <style scoped>
+    .redlies{
+        text-decoration:line-through;
+    }
 .mypricespecial{
     text-decoration: none;
     color:#333333;;
 
 }
+.mainprice{
+    font-size: 18px; color: red;
+}
 .mypricespecial  * h5{
-    font-size: 24px;
+    font-size:14px;
     font-weight: bolder;
     color:dimgray;;
 
+}
+    .mypricespecial  * p{
+        font-size:10px;
+        font-weight: bolder;
+        color:dimgray;;
+
+    }
+.myitems{
+    margin-top: -5px;
+    font-weight: bolder;
 }
 .bg-yellow{
     background-color:yellow ;
@@ -221,4 +358,31 @@
 .img-hover-zoom:hover img {
     transform: scale(1.2);
 }
+    .tiss-thumpbox{
+        margin: 10px;
+        border-radius: 4px;
+        margin-top: -125px;
+        background-color: #ffffff;
+        padding: 10px;
+        height: 78px;
+        line-height: 1;
+
+
+    }
+    .h400{
+        height: 400px;
+        overflow: hidden;
+    }
+    .yellowtext{
+        color: #e0ab0f;
+    }.m--4{
+             margin-top: -11px;
+         }
+    .greentext{
+        color: #e0670b;
+    }
+    .removedecration{
+        text-decoration: none;
+        color: gray;
+    }
 </style>

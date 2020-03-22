@@ -123,7 +123,13 @@
                             name="special"
                             :file="mydata.special.data"
                     ></file-uploader>
-
+                    <label  v-text="$t('Product')"></label>
+                    <v-select dir="rtl" v-model="mydata.prs.data"  :options="products"  label="model">
+                        <template      v-slot:option="option">
+                            <div>{{ option.name }}     {{ option.model }}</div>
+                            <small>{{ option.to_group.name }}</small>
+                        </template>
+                    </v-select>
 
                 </div>
                 <input type="submit" class="btn mt-4  mb-4 btn-primary" :value="$t('save')">
@@ -322,6 +328,10 @@
                         mode:'article'
                     },
                     pr1:{
+                        data:null,
+                        mode:'product'
+                    },
+                    prs:{
                         data:null,
                         mode:'product'
                     },
