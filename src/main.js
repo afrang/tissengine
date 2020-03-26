@@ -12,10 +12,12 @@ import logout from './components/Auth/Logout'
 import firstpage from "./view/pages/firstpage";
 
 /* BLog Group */
-
+import articlegroup from './view/pages/articlegroup';
+import articleshow from "./view/pages/articleshow";
 import VueSidebarMenu from 'vue-sidebar-menu'
 
-
+/* Product */
+import category from "./view/market/category";
 Vue.config.productionTip = false;
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
@@ -93,11 +95,28 @@ const router=new  VueRouter({
             name:'logout',
             component:logout
         },
+
         // View Routers
         {
             path:'/',
             name:'firstpage',
             component:firstpage
+        },
+        {
+            path:'/group/:url',
+            name:'articlegroup',
+            component:articlegroup
+        },
+        {
+            path:'/blog/:url',
+            name:'articleshpw',
+            component:articleshow
+        },
+        // market
+        {
+            path:'/category',
+            name:'category',
+            component:category
         },
     ]
 })

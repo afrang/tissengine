@@ -16,7 +16,6 @@
                     <label v-text="$t('OffSectionSlider')"></label>
                     <v-select  @input="pluskeycomponent()"  dir="rtl" v-model="mydata.offsliders.data"  :options="sliders" label="name" ></v-select>
                     <template v-if="mydata.offsliders.data!=null">
-                        <pre>{{ mydata.offsliders.data.urlname }}</pre>
                         <slider1   height="200px"  :key="kecomponent" :name="mydata.offsliders.data.urlname"></slider1>
 
                     </template>

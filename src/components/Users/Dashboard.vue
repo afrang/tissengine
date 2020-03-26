@@ -61,6 +61,7 @@
     import productgroup from "./Product/productgroup";
     import product from "./Product/productdetail";
     import firstpage from "./setting/firstpage";
+    import layoutproduct from "./Product/layoutproduct";
     export default {
             name: "Dashboard",
         components: {
@@ -83,7 +84,8 @@
             color,
             productgroup,
             product,
-            firstpage
+            firstpage,
+            layoutproduct
         },
         data(){
             return{
@@ -258,6 +260,11 @@
                                 icon: 'icofont-verification-check ',
                                 href: '#product',
                                 title: this.$t('product')
+                            },
+                           {
+                                    icon: 'icofont-verification-check ',
+                                    href: '#layoutproduct',
+                                    title: this.$t('layoutproduct')
                             },
 
                         ]

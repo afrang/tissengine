@@ -249,7 +249,6 @@
         background-color: rgba(255, 255, 255, 0.3);
         width: 100%;
 
-        position: absolute;
         z-index: 200;
     }
     .backgroundtrsparet{

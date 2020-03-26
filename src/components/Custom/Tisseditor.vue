@@ -135,7 +135,6 @@
         <template v-if="showeditors==true">
 
         </template>
-        <pre>{{ vtext }}</pre>
         <froala id="edit" :key="keys" :tag="'textarea'"   :config="config" v-model="vtext"></froala>
 
         <a @click="apartshow" class="btn text-white btn-sm btn-dark m-1">{{ $t('Aparat')}} | <span class="icofont-ui-movie"></span>  </a>

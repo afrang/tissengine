@@ -70,6 +70,9 @@
                             <input  @keyup="urlcreate" class="form-control col-xs-12 col-sm-12 " v-model="blog.name">
                             <label v-text="$t('url')"></label>
                             <input  class="form-control col-xs-12 col-sm-12 " v-model="blog.url">
+                            <label v-text="$t('title')"></label>
+                            <input  class="form-control col-xs-12 col-sm-12 " v-model="blog.title">
+
                             <label v-text="$t('Group')"></label>
 
 
@@ -149,6 +152,7 @@
                     url:null,
                     keywords:null,
                     description:null,
+                    title:null,
                     tag:null,
                     ordered:null
                 },
@@ -193,6 +197,7 @@
                     publish:1,
                     text:null,
                     url:null,
+                    title:null,
                     keywords:null,
                     description:null,
                     tag:null,
@@ -227,6 +232,7 @@
                 formData.append('name', this.blog.name);
                 formData.append('publish', this.blog.publish);
                 formData.append('text', this.blog.text);
+                formData.append('title', this.blog.title);
                 formData.append('url', this.blog.url);
                 formData.append('keywords', this.blog.keywords);
                 formData.append('description', this.blog.description);
