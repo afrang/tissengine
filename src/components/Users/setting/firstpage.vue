@@ -443,6 +443,7 @@
                 this.kecomponent=this.kecomponent+1;
             },
             doSomething(e){
+
                 this.mydata.about.data=e;
             },
             img1(e){

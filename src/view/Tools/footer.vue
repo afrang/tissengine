@@ -1,14 +1,13 @@
 <template>
     <div>
-        <div class="yellowfooter">
+        <div class="yellowfooter" v-if="contact!=null">
             <div class="row" dir="rtl">
 
                 <div class="col-sm-2 col-xs-12 row">
 
                         <div class="col-sm-12 row text-center m-4 "  style="padding-top: 40px; ">
-
                             <div class=" col-sm-4 ">
-                                <a :href="contact.facebook" class="btn btn-blue btn-circle icofont-facebook"></a>
+                                <a :href="contact.facbook" class="btn btn-blue btn-circle icofont-facebook"></a>
                             </div>
                             <div class=" col-sm-4 ">
                                 <a  :href="contact.instagram" class="btn btn-instgram btn-circle icofont-instagram"></a>
@@ -51,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div class="footer">
+        <div class="footer" v-if="setting!=null">
             <div class="container row text-right myfooter" dir="rtl">
                 <div class="col-sm-3 col-xs-12 text-right">
                     <h6 v-text="$t('quickaccess')"></h6>
@@ -99,7 +98,7 @@
 
 <script>
     export default {
-        name: "footer",
+        name: "footers",
         data() {
             return {
               setting:null,

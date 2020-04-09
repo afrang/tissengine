@@ -92,11 +92,20 @@
 
                                 </div>
                             </div>
+
                             <hr>
                             <div class="col-sm-6">
                                 <label   v-text="$t('mode')"></label>
                                 <select class="form-control" v-model="detail.mode">
                                     <option v-for="(item,index) in model" :key="index" :value="item.id" v-text="$t(item.name)"></option>
+                                </select>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label   v-text="$t('filtermode')"></label>
+                                <select class="form-control" v-model="detail.filtered">
+                                    <option value="0" v-text="$t('no')"></option>
+                                    <option value="1" v-text="$t('yes')"></option>
                                 </select>
 
                             </div>

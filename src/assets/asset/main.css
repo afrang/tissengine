@@ -35,3 +35,15 @@
 .tiss-cursur{
     cursor: pointer;
 }
+html *{
+    font-size: 12px;
+}
+.wmaster *{
+    font-size: 12px;
+}
+input *{
+    font-size: 12px;
+}
+btn{
+    font-size: 12px !important;
+}

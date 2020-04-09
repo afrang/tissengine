@@ -86,7 +86,6 @@
 
                 <input type="submit" class="btn mt-4 btn-primary" :value="$t('save')">
             </form>
-            <pre>{{  mydata }}</pre>
 
         </div>
 
@@ -171,121 +170,7 @@
                         data:null,
                         mode:'text'
                     },
-                  /*  img1:{
-                        data:null,
-                        mode:'img'
-                    },
-                    img2:{
-                        data:null,
-                        mode:'img'
-                    },
-                    offsliders:{
-                        data:null,
-                        mode:'slider'
-                    },
-                    sliders:{
-                        data:null,
-                        mode:'slider'
-                    },
-                    urlbox1:{
-                        data:null,
-                        mode:'text'
-                    },
-                    urlbox2:{
-                        data:null,
-                        mode:'text'
-                    },
-                    url1:{
-                        data:null,
-                        mode:'text'
-                    },
-                    url2:{
-                        data:null,
-                        mode:'text'
-                    },
-                    b1img:{
-                        data:null,
-                        mode:'img'
-                    },
-                    b2img:{
-                        data:null,
-                        mode:'img'
-                    },
-                    b3img:{
-                        data:null,
-                        mode:'img'
-                    },
-                    b4img:{
-                        data:null,
-                        mode:'img'
-                    },
-                    b1:{
-                        data:null,
-                        mode:'article'
-                    },
-                    b2:{
-                        data:null,
-                        mode:'article'
-                    },
-                    b3:{
-                        data:null,
-                        mode:'article'
-                    },
-                    b4:{
-                        data:null,
-                        mode:'article'
-                    },
-                    pr1:{
-                        data:null,
-                        mode:'product'
-                    },
-                    prs:{
-                        data:null,
-                        mode:'product'
-                    },
-                    pr2:{
-                        data:null,
-                        mode:'product'
-                    },
-                    pr3:{
-                        data:null,
-                        mode:'product'
-                    },
-                    special:{
-                        data:null,
-                        mode:'img'
-                    },
-                    pr4:{
-                        data:null,
-                        mode:'product'
-                    },
-                    aboutimg:{
-                        data:null,
-                        mode:'img'
-                    },
-                    about:{
-                        data:null,
-                        mode:'longtext'
-                    },
-                    footerimg:{
-                        data:null,
-                        mode:'img'
-                    },
-                    tagslider:{
-                        data:null,
-                        mode:'tag'
-                    },
 
-                    counter:{
-                        start:null,
-                        end:null,
-                        mode:'timepicker'
-                    },
-                    counter2:{
-                        start:null,
-                        end:null,
-                        mode:'timepicker'
-                    },*/
                 },
                 sliders:{},
                 products:{},

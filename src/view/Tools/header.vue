@@ -184,7 +184,7 @@
     import 'vue-popperjs/dist/vue-popper.css';
 
     export default {
-        name: "header",
+        name: "headers",
         data(){
             return{
                 countbasket:5,

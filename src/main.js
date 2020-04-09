@@ -15,11 +15,13 @@ import firstpage from "./view/pages/firstpage";
 import articlegroup from './view/pages/articlegroup';
 import articleshow from "./view/pages/articleshow";
 import VueSidebarMenu from 'vue-sidebar-menu'
-
+import groups from "./view/market/groups";
 /* Product */
 import category from "./view/market/category";
+import product from "./view/market/product";
 Vue.config.productionTip = false;
 import VueI18n from 'vue-i18n';
+
 Vue.use(VueI18n);
 Vue.use(VueAxios, axios)
 Vue.use(VueRouter);
@@ -30,6 +32,8 @@ Vue.use(require('vue-jalali-moment'));
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 import 'vue-select/dist/vue-select.css';
 require('bootstrap');
+import ('bootstrap/dist/css/bootstrap.min.css');
+
 import vSelect from 'vue-select'
 
 Vue.component('v-select', vSelect);
@@ -63,7 +67,7 @@ Vue.use(VueCarousel);
 import VueFroala from 'vue-froala-wysiwyg'
 import VModal from 'vue-js-modal'
 
-Vue.use(VModal)
+Vue.use(VModal);
 Vue.use(VueFroala)
 Vue.config.productionTip = false
 const messages = {    'fa':fa,    'en': en};
@@ -118,6 +122,17 @@ const router=new  VueRouter({
             name:'category',
             component:category
         },
+        {
+            path:'/category/:url',
+            name:'groups',
+            component:groups
+        },
+        {
+            path:'/product/:url',
+            name:'product',
+            component:product
+        },
+
     ]
 })
 

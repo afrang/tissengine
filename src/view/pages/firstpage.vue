@@ -1,18 +1,19 @@
 <template>
-    <div v-if="firsptagedata!={}">
-        <headers :key="1" class="headerfirstpage" ></headers>
-        <slider1  class="myslider" height="320" :id="firsptagedata[0].image" :name="'topslider'"></slider1>
+    <div  v-if="cfirsptagedata!={}">
+        <headers  class="headerfirstpage" ></headers>
+        <slider1 v-if="cfirsptagedata.offsliders"  class="myslider" height="320" :id="cfirsptagedata.sliders.image" :name="'topslider'"></slider1>
         <div class="bg-yellow">
             <div class="container" dir="">
                 <div class="row">
                     <div class="col-sm-4 col-xs-12 p-4" dir="rtl" >
                         <div class="row">
                             <div class="col-sm-12 text-center">
-                                <a :href="firsptagedata[11].text">
-                                    <countdown
-                                            v-if="firsptagedata[24].text!=null"
-                                            style="position: absolute; margin-top:6px; margin-left: -20px;"
-                                            trans='{
+                                <a v-if="cfirsptagedata.urlbox1" :href="cfirsptagedata.urlbox1.text">
+                                    <template v-if="cfirsptagedata.counter2">
+                                        <countdown
+                                                v-if="cfirsptagedata.counter2.text!=null"
+                                                style="position: absolute; margin-top:6px; margin-left: -20px;"
+                                                trans='{
                                          "day":"Day",
                                          "hours":"Hours",
                                          "minutes":"Minuts",
@@ -25,38 +26,42 @@
                                             "running":"Running",
                                             "upcoming":"Future"
                                            }}'
-                                            :starttime='[ firsptagedata[24].text, "jYYYY/jMM/jDD HH:mm" ] | moment("MMM D, YYYY hh:mm:00")'
-                                            :endtime='[ firsptagedata[24].image, "jYYYY/jMM/jDD HH:mm" ] | moment("MMM D, YYYY hh:mm:00")' ></countdown>
+                                                :starttime='[ cfirsptagedata.counter2.text, "jYYYY/jMM/jDD HH:mm" ] | moment("MMM D, YYYY hh:mm:00")'
+                                                :endtime='[ cfirsptagedata.counter2.image, "jYYYY/jMM/jDD HH:mm" ] | moment("MMM D, YYYY hh:mm:00")' ></countdown>
+                                    </template>
 
-                                    <img  class="img-thumbnail w-100" style="height: 190px;"  :src="$storage+'media/firspage/1/thump/'+firsptagedata[3]['image']" >
+                                    <img  v-if="cfirsptagedata.img1" class="img-thumbnail w-100" style="height: 190px;"  :src="$storage+'media/firspage/1/thump/'+cfirsptagedata.img1.image" >
                                 </a>
 
                             </div>
                             <div class="col-sm-12 mt-4" >
-                                <countdown
-                                        v-if="firsptagedata[25].text!=null"
-                                        style="position: absolute; margin-top:6px; margin-left: -20px;"
-                                        trans='{
-                                         "day":"Day",
-                                         "hours":"Hours",
-                                         "minutes":"Minuts",
-                                         "seconds":"Seconds",
-                                         "expired":"Event has been expired.",
-                                         "running":"Till the end of event.",
-                                         "upcoming":"Till start of event.",
-                                         "status": {
-                                            "expired":"Expired",
-                                            "running":"Running",
-                                            "upcoming":"Future"
-                                           }}'
-                                        :starttime='[ firsptagedata[25].text, "jYYYY/jMM/jDD HH:mm" ] | moment("MMM D, YYYY hh:mm:00")'
-                                        :endtime='[ firsptagedata[25].image, "jYYYY/jMM/jDD HH:mm" ] | moment("MMM D, YYYY hh:mm:00")' ></countdown>
-                                <img class="img-thumbnail w-100" style="height: 190px;"   :src="$storage+'media/firspage/1/thump/'+firsptagedata[2]['image']" >
+                                <template v-if="cfirsptagedata.counter">
+                                    <countdown
+                                            v-if="cfirsptagedata.counter.text!=null"
+                                            style="position: absolute; margin-top:6px; margin-left: -20px;"
+                                            trans='{
+                                          "day":"Day",
+                                          "hours":"Hours",
+                                          "minutes":"Minuts",
+                                          "seconds":"Seconds",
+                                          "expired":"Event has been expired.",
+                                          "running":"Till the end of event.",
+                                          "upcoming":"Till start of event.",
+                                          "status": {
+                                             "expired":"Expired",
+                                             "running":"Running",
+                                             "upcoming":"Future"
+                                            }}'
+                                            :starttime='[ cfirsptagedata.counter.text, "jYYYY/jMM/jDD HH:mm" ] | moment("MMM D, YYYY hh:mm:00")'
+                                            :endtime='[ cfirsptagedata.counter.image, "jYYYY/jMM/jDD HH:mm" ] | moment("MMM D, YYYY hh:mm:00")' ></countdown>
+
+                                </template>
+                                <img  v-if="cfirsptagedata.img2" class="img-thumbnail w-100" style="height: 190px;"  :src="$storage+'media/firspage/1/thump/'+cfirsptagedata.img2.image" >
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-8 col-xs-12 p-4" >
-                        <slider2  :id="firsptagedata[1].image"></slider2>
+                        <slider2  v-if="cfirsptagedata.offsliders" :id="cfirsptagedata.offsliders.image"></slider2>
                     </div>
                 </div>
             </div>
@@ -73,7 +78,7 @@
                                     <div class="col-sm-12 text-right">
                                         <span v-if="item.percent!=null" class="badge badge-danger float-left" v-text="item.percent+ '%'"></span>
                                         <p v-text="item.group" class="yellowtext"></p>
-                                        <h5 class="m--4" dir="rtl"><span v-text="item.name" class="font-weight-bolder"></span> <small class="text-blue font-weight-bolder m--4" v-text="item.model"></small></h5>
+                                        <h5 class="m&#45;&#45;4" dir="rtl"><span v-text="item.name" class="font-weight-bolder"></span> <small class="text-blue font-weight-bolder m&#45;&#45;4" v-text="item.model"></small></h5>
                                     </div>
                                     <div class="col-sm-6 text-right myitems  redlies " >
                                         <template v-if="item.price!=null">
@@ -88,21 +93,20 @@
                                         </template>
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
                     </a>
                 </slide>
             </carousel>
         </template>
-        <div class="container">
+        <div class="container" >
             <div class=" row mt-3 productfirst">
                 <div class="col-sm-6 col-xs-12 text-center">
-                    <a :href="'/prodcut/'+product.prs.data.url">
+                    <a  v-if="product.prs!=null" :href="'/prodcut/'+product.prs.data.url">
                         <div class="img-hover-zoom">
-                            <img :src="$storage+'media/firstpage/1/orginal/'+firsptagedata[8].image" class="w-100" style="border-radius: 5px;">
+                            <img  v-if="cfirsptagedata!=null" :src="$storage+'media/firstpage/1/orginal/'+cfirsptagedata.special.image" class="w-100" style="border-radius: 5px;">
                         </div>
+
                         <div class="container">
                             <div v-if="product.prs!=null" class="row mt-2 mypricespecial" >
                                 <div class="col-sm-6 text-left">
@@ -129,8 +133,7 @@
                 <div class="col-sm-6 col-xs-12">
                     <div class="row">
                         <div class="col-sm-6"  v-for="(n, index) in 4"  :key="index">
-                            <a :href="'/prodcut/'+product['pr'+(index+1)].data.url">
-
+                            <a  v-if="product['pr'+(index+1)]!=null" :href="'/prodcut/'+product['pr'+(index+1)].data.url">
                                 <template v-if="product['pr'+(index+1)]!=null" >
                                     <div class="img-hover-zoom">
                                         <img  v-if="product['pr'+(index+1)].data.image!=null" height="320px;" class="w-100" style="border-radius: 5px;" :src="$storage+'media/Product/'+product['pr'+(index+1)].data.id+'/thump/'+product['pr'+(index+1)].data.image" :alt="product['pr'+(index+1)].data.name">
@@ -148,7 +151,6 @@
                                             <h5 >{{ product['pr'+(index+1)].data.name }} <small>{{ product['pr'+(index+1)].data.model }}</small></h5>
                                             <p>{{ product['pr'+(index+1)].data.group }}</p>
                                         </div>
-
                                     </div>
                                 </template>
                             </a>
@@ -161,8 +163,8 @@
             <div class="row">
                 <div class="col-sm-6 col-xs-12 p-0">
                     <div class="">
-                        <img :src="$storage+'media/firstpage/1/orginal/'+firsptagedata[4].image" width="100%" style="height: 800px;">
-                        <a :href="'/blog'+blog['b1'].data.url">
+                        <img v-if="cfirsptagedata.b1img.image" :src="$storage+'media/firstpage/1/orginal/'+cfirsptagedata.b1img.image" width="100%" style="height: 800px;">
+                        <a  v-if="blog['b1']!=null" :href="'/blog'+blog['b1'].data.url">
                             <div class="boxb1 " dir="rtl">
                                 <p v-text="blog['b1'].data.title"></p>
                                 <h4 v-text="blog['b1'].data.name"></h4>
@@ -172,23 +174,23 @@
                 </div>
                 <div class="col-sm-6 col-xs-12 row p-0" >
                     <div class="col-sm-6 p-0" style="height: 400px;">
-                        <img :src="$storage+'media/firstpage/1/orginal/'+firsptagedata[6].image" width="100%" style="height: 400px;">
-                        <div class="b2text textblog">
+                        <img v-if="cfirsptagedata.b2img.image" :src="$storage+'media/firstpage/1/orginal/'+cfirsptagedata.b2img.image" width="100%" style="height: 400px;">
+                        <div   v-if="blog['b1']!=null" class="b2text textblog">
                             <p v-text="blog['b1'].data.title"></p>
                             <h4 v-text="blog['b1'].data.name"></h4>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="col-sm-6 p-0" style="height: 400px;">
-                        <img :src="$storage+'media/firstpage/1/orginal/'+firsptagedata[5].image" width="100%" style="height: 400px;">
-                        <div class="b2text textblog">
+                        <img  v-if="cfirsptagedata.b3img"  :src="$storage+'media/firstpage/1/orginal/'+cfirsptagedata.b3img.image" width="100%" style="height: 400px;">
+                        <div    v-if="blog['b2']!=null" class="b2text textblog">
                             <p class="text-white"  v-text="blog['b2'].data.title"></p>
                             <h4 class="text-white"  v-text="blog['b2'].data.name"></h4>
                         </div>
                     </div>
                     <div class="clearfix"></div>
                     <div class="col-sm-12 p-0">
-                        <img :src="$storage+'media/firstpage/1/orginal/'+firsptagedata[7].image" width="100%" style="height: 400px;">
-                        <a :href="'/blog'+blog['b3'].data.url">
+                        <img  v-if="cfirsptagedata.b4img"  :src="$storage+'media/firstpage/1/orginal/'+cfirsptagedata.b4img.image" width="100%" style="height: 400px;">
+                        <a   v-if="blog['b3']!=null" :href="'/blog'+blog['b3'].data.url">
                             <div class="boxb1 " dir="rtl" style="margin-top:-140px; color:#fff;">
                                 <p  v-text="blog['b3'].data.title"></p>
                                 <h4 class="text-white"   v-text="blog['b3'].data.name"></h4>
@@ -200,11 +202,11 @@
                 </div>
                 <div class="col-sm-12 row" dir="rtl">
                     <div class="col-sm-6 col-xs-12 p-4">
-                        <show-article class="text-justify text-white" :text="firsptagedata[19].text"></show-article>
+                        <show-article class="text-justify text-white" :text="cfirsptagedata.about.text"></show-article>
                         <div class="clearfix"></div>
                     </div>
                     <div class="col-sm-6 col-xs-12 text-center pt-4">
-                        <img  style="margin-top: 300px;"  class="mt-4"  :src="$storage+'media/firstpage/1/thump/'+firsptagedata[9]['image']" >
+                        <img  v-if="cfirsptagedata.aboutimg"    style="margin-top: 300px;"  class="mt-4"  :src="$storage+'media/firstpage/1/thump/'+cfirsptagedata.aboutimg.image" >
                     </div>
                 </div>
                 <br>
@@ -212,11 +214,8 @@
             </div>
         </div>
         <div class="mesa" style="background-image: url('http://127.0.0.1:8000/media/firstpage/1/orginal/footerimg.jpeg?=7186')">
-
         </div>
         <footers></footers>
-
-
     </div>
 </template>
 
@@ -236,24 +235,21 @@
     export default {
         name: "firstpage",
         components:{
-            ShowArticle,
             slider1,
             slider2,
+            footers,
             headers,
             countdown,
-            StarRating,
             Carousel,
-            Slide,
-            VueNumeric,
-            footers
+            ShowArticle
+
 
         },
-        watch :{
 
-        },
 
         data: () => ({
-            firsptagedata:{},
+            firsptagedata:null,
+            cfirsptagedata:{},
             listspecial:null,
             moneyslide:{
                 decimal: ',',
@@ -264,7 +260,10 @@
                 masked: false
             },
             blog:{
-                b1:null
+                b1:null,
+                b2:null,
+                b3:null,
+                b4:null,
             },
             product:{
                 prs:null,
@@ -275,82 +274,93 @@
 
             }
         }),
+        watch :{
+            firsptagedata:function (mydata) {
+                let self=this;
+                mydata.map(function(item){
+                    self.cfirsptagedata[item.name]=item;
+                    if(item.name=='tagslider'){
+                        self.searchproduct();
+                    }
+                    if(item.name=='prs'){
+                        self.findprs('prs');
+                    }
+                    if(item.name=='pr1'){
+                        self.findprs('pr1');
+                    }
+                    if(item.name=='pr2'){
+                        self.findprs('pr2');
+                    }
+                    if(item.name=='pr3'){
+                        self.findprs('pr3');
+                    }
+                    if(item.name=='pr4'){
+                        self.findprs('pr4');
+                    }
+                    if(item.name=='b1'){
+                        self.blogshow('b1');
+                    }
+                    if(item.name=='b2'){
+                        self.blogshow('b2');
+                    }
+                    if(item.name=='b3'){
+                        self.blogshow('b3');
+                    }
+                    if(item.name=='b4'){
+                        self.blogshow('b4');
+                    }
+                });
 
+            },
+
+
+        },
         methods:{
             loaddata(){
                 let that=this;
-                this.$axios.get(this.$url+'firstpage').then(function (res) {
-                           that.firsptagedata = res.data;
+                this.$axios.get(this.$url+'firstpage',{
+                    params:{
+                        methods:'firstpage',
+                    },
+                }).then(function (res) {
+                    that.firsptagedata = res.data;
 
 
-                }).then(function () {
-                    that.options();
                 });
             },
-            options(){
-
-                console.log(that.firsptagedata);
+            searchproduct(){
                 let that=this;
 
                 this.$axios.get(this.$url+'searchproduct',{
                     params: {
-                        tag:that.firsptagedata[26].image
+                        tag:that.cfirsptagedata.tagslider.image
 
                     },
                 }).then(function (res) {
                     that.listspecial=res.data;
                 });
-                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[27].image,{
+            },
+            findprs(pr){
+                let that=this;
+
+                this.$axios.get(this.$url+'searchproduct/'+this.cfirsptagedata[pr].image,{
                     params: {
 
                     },
                     headers:{Authorization:localStorage.token}
                 }).then(function (res) {
-                    that.product['prs']=res.data;
+                    that.product[pr]=res.data;
                 });
-
-                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[15].image,{
-                    params: {
-
-                    },
+            },
+            blogshow(blog){
+                let that=this;
+                this.$axios.get(this.$url+'article/'+this.cfirsptagedata[blog].image,{
                 }).then(function (res) {
-                    that.product['pr1']=res.data;
+                    that.blog[blog]=res.data;
                 });
-                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[16].image,{
-                    params: {
+            },
+            options(){
 
-                    },
-                }).then(function (res) {
-                    that.product['pr2']=res.data;
-                });
-
-                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[17].image,{
-                    params: {
-
-                    },
-                }).then(function (res) {
-                    that.product['pr3']=res.data;
-                });
-                this.$axios.get(this.$url+'searchproduct/'+this.firsptagedata[18].image,{
-                    params: {
-
-                    },
-                }).then(function (res) {
-                    that.product['pr4']=res.data;
-                });
-                this.$axios.get(this.$url+'article/'+this.firsptagedata[20].image,{
-                }).then(function (res) {
-                    that.blog['b1']=res.data;
-                });
-                this.$axios.get(this.$url+'article/'+this.firsptagedata[21].image,{
-                }).then(function (res) {
-                    that.blog['b2']=res.data;
-                });
-                this.$axios.get(this.$url+'article/'+this.firsptagedata[22].image,{
-
-                }).then(function (res) {
-                    that.blog['b3']=res.data;
-                });
             }
         },
         mounted() {
@@ -360,9 +370,9 @@
 </script>
 
 <style scoped>
-        .headerfirstpage{
-            position: absolute;z-index: 5000; width: 100%;
-        }
+    .headerfirstpage{
+        position: absolute;z-index: 5000; width: 100%;
+    }
     .mesa{
         width: 100%;
         height: 700px;

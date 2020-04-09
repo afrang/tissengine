@@ -396,6 +396,7 @@
         beforeUpdate: function () {
             if(this.vtext==null){
                 this.vtext=this.text.replace('%url%',this.$storage);
+
             }
 
         }

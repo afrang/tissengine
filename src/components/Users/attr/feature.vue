@@ -101,6 +101,14 @@
 
                         </div>
                         <div class="col-sm-6">
+                            <label   v-text="$t('filtermode')"></label>
+                            <select class="form-control" v-model="detail.filtered">
+                                <option value="0" v-text="$t('no')"></option>
+                                <option value="1" v-text="$t('yes')"></option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm-6">
                             <template v-if="detail.mode==4">
                                 <label   v-text="$t('options')"></label>
                                 <div>
