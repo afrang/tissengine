@@ -10,15 +10,19 @@ import Swal from 'sweetalert2'
 import Dashboard from './components/Users/Dashboard'
 import logout from './components/Auth/Logout'
 import firstpage from "./view/pages/firstpage";
+import CKeditor from 'ckeditor4-vue'
 
 /* BLog Group */
 import articlegroup from './view/pages/articlegroup';
 import articleshow from "./view/pages/articleshow";
 import VueSidebarMenu from 'vue-sidebar-menu'
 import groups from "./view/market/groups";
+
 /* Product */
 import category from "./view/market/category";
 import product from "./view/market/product";
+import VueClipboard from 'vue-clipboard2'
+
 Vue.config.productionTip = false;
 import VueI18n from 'vue-i18n';
 
@@ -26,9 +30,11 @@ Vue.use(VueI18n);
 Vue.use(VueAxios, axios)
 Vue.use(VueRouter);
 Vue.use(Showerror);
+Vue.use(CKeditor);
+
 Vue.use(VueSidebarMenu);
 Vue.use(require('vue-jalali-moment'));
-
+Vue.use(VueClipboard);
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 import 'vue-select/dist/vue-select.css';
 require('bootstrap');

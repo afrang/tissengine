@@ -1,15 +1,15 @@
 <template>
     <div class="row">
-        <modal v-if="masterimg!=null" name="demo-login" transition="pop-out" :width="modalWidth"  :height="500"   dir="ltr">
+        <modal  v-if="masterimg!=null" name="demo-login" transition="pop-out" :width="modalWidth"  :height="500"   dir="ltr">
             <div class="box">
                 <div class="box-part" id="bp-left">
                     <div class="partition" id="partition-register">
-                        <div class="partition-title" dir="rtl" v-text="product.name"></div>
+                        <div class="partition-title" dir="rtl" v-text="product.data.name"></div>
                         <div class="partition-form" style="overflow-y: auto; height: 100%; ">
                             <ul class="myitemimages">
-                                <template  v-for="(item,index) in product.to_image">
+                                <template  v-for="(item,index) in product.data.toImage">
                                     <li :key="index"  class="tiss-cursur" @click="changepicture(item)">
-                                        <img  :src="$storage+'media/Product/'+product.id+'/thump/'+item.file" width="100%">
+                                        <img  :src="$storage+'media/Product/'+product.data.id+'/thump/'+item.file" width="100%">
                                     </li>
                                 </template>
                             </ul>
@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="box-part" id="bp-right" >
-                        <img  style="width: 100%;" :src="$storage+'media/Product/'+product.id+'/medium/'+masterimg.file"  >
+                    <img  style="width: 100%;" :src="$storage+'media/Product/'+product.data.id+'/medium/'+masterimg.file"  >
                 </div>
             </div>
         </modal>
@@ -25,12 +25,12 @@
         <div class="col-sm-5 col-xs-12" >
             <template v-if="masterimg!=null">
                 <div >
-                    <img class="w-100 " :src="$storage+'media/Product/'+product.id+'/medium/'+masterimg.file">
+                    <img class="w-100 " :src="$storage+'media/Product/'+product.data.id+'/medium/'+masterimg.file">
                 </div>
                 <ul class="myitemimage">
-                    <template  v-for="(item,index) in product.to_image">
-                        <li :key="index" v-if="index<=4"  class="tiss-cursur" @click="changepicture(item)">
-                            <img  :src="$storage+'media/Product/'+product.id+'/thump/'+item.file">
+                    <template  v-for="(item,index) in product.data.toImage">
+                        <li :key="index" v-if="index<=4"   class="tiss-cursur" @click="changepicture(item)">
+                            <img  :src="$storage+'media/Product/'+product.data.id+'/thump/'+item.file">
                             <div class="moreimage" v-if="index==4" @click="show">
                                 <i class="icofont-multimedia icofont-2x text-white"></i>
                             </div>
@@ -43,23 +43,204 @@
 
         </div>
         <div class="col-sm-4 col-xs-12 mydetailnumber">
-            <h1 v-text="product.name"></h1>
-            <h4 v-text="product.model"></h4>
+            <h1 v-text="product.data.name"></h1>
+            <h4 v-text="product.data.model"></h4>
             <div class="row text-right" dir="rtl ">
                 <div class="col-sm-6">
-                    <span v-text="$t('category')"></span><a :href="'/category/'+product.to_group.url" v-text="product.to_group.name"></a>
                 </div>
             </div>
-            <div class="row text-right" dir="rtl ">
-                <div class="col-sm-6">
-                <span v-text="$t('color')"></span>:
-                </div>
-            </div>
-            <span @click="loadproduct">pciture</span>
 
-            <pre>{{ product.to_color }}</pre>
+            <div class="row text-right mt-2" dir="rtl ">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <a class="titledetail" v-text="$t('category')"></a>
+                    </div>
+                    <div class="col-sm-8" >
+                        <a class="titledetailvalue linkedes" :href="'/category/'+product.data.toGroup.url" v-text="product.data.toGroup.name"></a>
+                    </div>
+                    <div class="col-sm-3 mt-3" v-if="product.data.toColor.length!=0">
+                        <a  class="titledetail"  v-text="$t('selectcolor')"></a>:
+                    </div>
+                    <div class="col-sm-12 mt-3" v-if="product.data.toColor.length!=0">
+
+                        <ul class="colorobox "  v-if="product.data.toColor.length!=0">
+                            <li  v-for="(color,index) in product.data.toColor" :key="index" @click="colorselect(index)" class="btn btn-outline-dark ouline-grey row">
+                                <span  class="col-sm-4 tiss-cursur bbbb border-1" :style="{'background-color': color.to_color.code }" :title="color.to_color.name"></span>
+                                <span class="col-sm-8 cccc" v-text="color.to_color.name"></span>
+
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                        <hr>
+                    </div>
+                    <div class="col-sm-12 mt-3">
+                        <ul v-if="product.data.attr.length!=0" class="mylistprice">
+                            <li v-for="(item,index) in product.data.attr" :key="index">
+                                <div class="card border-dark mb-3 w-100" >
+                                    <div class="card-header">
+                                        <span  v-text="item.name"></span>
+                                        <template v-if="item.pricemode==1">
+                                            |  <span class="icofont-plus-square"></span>
+                                        </template>
+                                    </div>
+                                    <div class="card-body text-dark">
+                                        <template v-for="(opt,inx) in item.option">
+                                            <div :key="inx" class="btn btn-outline-dark mt-1 text-right w-100 " :class="itemcolor(index,inx,item.pricemode)" @click="calcprice(index,inx)"  style="border: rgba(21,21,21,0.6);">
+                                                <div class="row" >
+                                                    <div class="col-sm-8  my-2x" v-text="opt.name"></div>
+                                                    <div class="col-sm-4">
+                                                        <template v-if="opt.price!=0">
+                                                            <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="opt.price"></VueNumeric> <small v-text="$t('toman')"></small>
+                                                            <div class="discount" v-if="opt.discount!=0">
+                                                                <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="opt.discount"></VueNumeric> <small v-text="$t('toman')"></small>
+                                                            </div>
+                                                        </template>
+                                                        <template v-else>
+                                                            <template v-if="item.pricemode==1">
+                                                                <span class="text-danger" v-text="$t('free')"></span>
+                                                            </template>
+                                                            <template v-else>
+                                                                <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="product.data.price"></VueNumeric> <small v-text="$t('toman')"></small>
+                                                                <div class="discount" v-if="product.data.discount!=0">
+                                                                    <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="product.data.discount"></VueNumeric> <small v-text="$t('toman')"></small>
+                                                                </div>
+                                                            </template>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div v-else>
+                            <div class="row">
+                                    <div class="col-sm-4 myprice" v-text="$t('price')"></div>
+                                    <div class="col-sm-8" >
+                                        <div class="mymainprice text-left">
+                                            <VueNumeric   dir="rtl" :read-only="true"  separator="," v-model="product.data.price"></VueNumeric> <small v-text="$t('toman')"></small>
+
+                                        </div>
+                                        <div class="mymaindiscount text-left" v-if="product.data.discount!=null || product.data.discount!=0">
+                                            <VueNumeric   dir="rtl" :read-only="true"  separator="," v-model="product.data.discount"></VueNumeric> <small v-text="$t('toman')"></small>
+
+                                        </div>
+
+                                    </div>
+
+                            </div>
+                        </div>
+                        <h4 v-text="$t('morecomment')" class="mt-4"> </h4>
+                        <div class="morecomemnt" :class="fewcomment" >
+                            <ShowArticle :text="product.data.morecomment"></ShowArticle>
+                        </div>
+                        <div class="text-center">
+                            <span class=" icofont-2x" :class="mousedown" @click="expandcomment"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-sm-3 col-xs-12">
+        <div class="col-sm-3 col-xs-12 ">
+            <div class="bg-grey-lights  text-left">
+                <div >
+                    <h5 class="pricetext text-right mt-3" v-text="$t('shareite')"></h5>
+                    <div class="bg-transparent">
+                        <ul class="sharemenu bg-transparent">
+                            <li><a class="btn btn-primary" :href="'https://www.facebook.com/sharer/sharer.php?m2w&s=100&p[url]='+link">
+                                <span class="icofont-facebook iconshareitew"></span>
+                            </a></li>
+                            <li>
+                                <a class="btn btn-primary"  target="_blank" :href="'https://twitter.com/intent/tweet?url='+link">
+                                    <span class="icofont-twitter iconshareitew"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="btn btn-success" target="_blank" :href="'https://api.whatsapp.com/send?phone=&text='+link+'&source=&data=&app_absent='">
+                                    <span class="icofont-whatsapp iconshareitew"></span>
+                                </a>
+                            </li>
+
+                            <li><a class="btn btn-outline-warning"  v-clipboard:copy="link" v-clipboard:success="onCopy" v-clipboard:error="onError">
+                                <span class="text-black copiedtext"  v-text="$t('copylink')"></span>
+                                <span class="icofont-ui-copy text-black iconshareite"></span>
+                            </a>
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <template v-if="totalprice==0">
+                    <div class="pricetext text-right" v-text="$t('selectyouroption')"></div>
+
+                </template>
+                <template v-else>
+
+                    <div class="row text-right" v-if="selectedoption.item!=null">
+                        <div class="col-sm-8 pricetextsmall text-right">
+                            <div>{{ selectedoption.attrvalue.name }}</div>
+                            <small class="text-primary" v-text="selectedoption.optionvalue.name"></small>
+                        </div>
+                        <div class="col-sm-4 text-left">
+                            <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="price"></VueNumeric> <small v-text="$t('toman')"></small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-right" v-if="optselectedoption.item!=null">
+                        <div class="col-sm-8 pricetextsmall text-right">
+                            <div>{{ optselectedoption.attrvalue.name }}</div>
+                            <small class="text-primary" v-text="optselectedoption.optionvalue.name"></small>
+
+                        </div>
+                        <div class="col-sm-4 text-left ">
+                            <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="addprice"></VueNumeric> <small v-text="$t('toman')"></small>
+                        </div>
+                    </div>
+                    <hr>
+                    <template v-if="colorselected!=null">
+                        <div>
+                            <div class="col-sm-8 pricetextsmall text-right">
+                                <a v-text="$t('color')"></a>:
+                                <small class="text-primary" v-text="colorselected.to_color.name"></small>
+                            </div>
+                            <div class="col-sm-4 ">
+                            </div>
+
+                        </div>
+                        <hr>
+                    </template>
+                    <div class="pricetext w-100 text-right" dir="ltr" v-text="$t('payprice')"></div>
+                    <span  class="pricevaluefinal" >
+                    <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="totalprice"></VueNumeric> <small v-text="$t('toman')"></small>
+
+                    </span>
+                    <div>
+                        <span  class="dpricevaluefinal" >
+                    <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="dtotalprice"></VueNumeric> <small v-text="$t('toman')"></small>
+                    </span>
+                    </div>
+                    <div>
+                        <span v-if="price!=0">
+                          <a v-if="status==1" class="btn bg-yellow w-100 mt-4 mb-2192192.1 ">اضافه کرده به سبد خرید</a>
+                          <a v-if="status==0"  class="btn bg-yellow w-100 mt-4 mb-2192192.1 ">ناموجود</a>
+                          <a v-if="status==3" class="btn bg-yellow w-100 mt-4 mb-2192192.1 ">اتمام تولید</a>
+
+                        </span>
+                        <span v-else>
+                          <a v-if="status==0"  class="btn bg-yellow w-100 mt-4 mb-2192192.1 ">ناموجود</a>
+                          <a v-if="status==3" class="btn bg-yellow w-100 mt-4 mb-2192192.1 ">اتمام تولید</a>
+
+                        </span>
+                    </div>
+
+
+                </template>
+
+            </div>
+
 
         </div>
     </div>
@@ -67,22 +248,147 @@
 
 <script>
     const MODAL_WIDTH = 1024
-
+    import VueNumeric from 'vue-numeric';
+    import ShowArticle from "../../components/Custom/ShowArticle";
     export default {
         name: "productdetailshow",
         props:['url'],
         data(){
             return{
+                status:1,
                 product:null,
                 masterimg:null,
-                modalWidth: MODAL_WIDTH
+                fewcomment:'smallparageraph',
+                mousedown:'icofont-scroll-double-down',
+                modalWidth: MODAL_WIDTH,
+                totalprice:0,
+                dtotalprice:0,
+                price:0,
+                colorselected:null,
+                dprice:0,
+                addprice:0,
+                daddprice:0,
+                selectedoption:{
+                    item:null,
+                    option:null,
+                    optionvalue:null,
+                    attrvalue:null,
+
+                },
+                optselectedoption:{
+                    item:null,
+                    option:null,
+                    optionvalue:null,
+                    attrvalue:null,
+
+                }
 
             }
         },
-        computed:{
-
+        components: {
+            VueNumeric,ShowArticle
         },
+        computed:{
+            link:function () {
+                if(this.product!=null){
+                    return   window.location.origin+this.$router.resolve({name: 'product', params: {url: this.product.data.url}}).href;
+                }else{
+                    return '';
+                }
+            },
+            selectcolor:function(){
+                return "backgroundcolor";
+            },
+        },
+
         methods:{
+            colorselect(e){
+                this.colorselected=this.product.data.toColor[e];
+                this.status=this.colorselected.existing;
+
+            },
+
+            onCopy: function (e) {
+                let that=this;
+                this.$swal.fire({
+                    position: 'center-center',
+                    icon: 'success',
+                    title: that.$t('Copied'),
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            },
+            onError: function (e) {
+                alert('Failed to copy texts')
+            },
+            calcprice(index,opt){
+                let self=this;
+                let item=this.product.data.attr[index];
+                let option=item.option[opt];
+                let curentprice=0;
+                if(item.pricemode==0){
+                    this.selectedoption.optionvalue=option;
+                    this.selectedoption.attrvalue=item;
+
+                    this.selectedoption.option=opt;
+                    this.selectedoption.item=index;
+                    if(option.price==0){
+                        self.price=this.product.data.price;
+                        self.dprice=this.product.data.discount;
+                    }else{
+
+                        self.price=option.price;
+                        self.dprice=option.discount;
+                    }
+
+                }
+                if(item.pricemode==1){
+                    this.optselectedoption.optionvalue=option;
+                    this.optselectedoption.attrvalue=item;
+
+                    this.optselectedoption.option=opt;
+                    this.optselectedoption.item=index;
+                    if(option.price==0){
+                        self.addprice=0;
+                    }else{
+                        self.addprice=option.price;
+                        self.daddprice=option.discount;
+                    }
+
+                }
+
+                if(item.pricemode==0) {
+                }
+                this.totalprice=this.price+this.addprice;
+                this.dtotalprice=this.dprice+this.daddprice;
+
+
+            },
+            itemcolor(item,option,pricemode){
+                if(pricemode==0){
+                    if(this.selectedoption.item==item &&  this.selectedoption.option==option){
+                        return 'itemselect';
+                    }
+                }
+                if(pricemode==1){
+                    if(this.optselectedoption.item==item &&  this.optselectedoption.option==option){
+                        return 'itemselect';
+                    }
+                }
+
+
+
+            },
+            expandcomment(){
+                if(this.fewcomment=='smallparageraph'){
+                    this.fewcomment='largparageraph';
+                    this.mousedown='icofont-scroll-double-up';
+                }else{
+                    this.fewcomment='smallparageraph';
+                    this.mousedown='icofont-scroll-double-down';
+                }
+
+            },
             show () {
                 this.$modal.show('demo-login');
             },
@@ -94,11 +400,14 @@
             },
             mainpage(){
                 let that=this;
-                this.product.to_image.filter(function (item) {
-                    if(item.master==1){
-                        that.masterimg=item;
-                    }
-                })
+                if(this.product.data.toImage){
+                    this.product.data.toImage.filter(function (item) {
+                        if(item.master==1){
+                            that.masterimg=item;
+                        }
+                    })
+                }
+
             },
             loadproduct(){
                 let that=this;
@@ -128,6 +437,16 @@
     $background_color: #404142;
     $github_color: #DBA226;
     $facebook_color: #3880FF;
+    .titledetail{
+        color: #151515;
+        font-size: 14px;
+    }
+    .titledetailvalue{
+        font-size: 14px;
+        color: #333333;
+        font-weight: bold;
+
+    }
     .mydetailnumber h1{
         direction: rtl;
         text-align: right;
@@ -140,6 +459,10 @@
         font-size: 14px;
         font-weight: bold;
         border-bottom: solid 1px rgba(141, 141, 141, 0.38);
+    }
+    .itemselect{
+        background-color: #e0ab0f !important;
+        color:#333333;
     }
     .box {
         background: white;
@@ -295,26 +618,26 @@
         height: 50px;
 
     }
-.myitemimage li{
-    float: right;
-    list-style: none;
-    border-collapse: separate;
-    border-spacing: 15px;
-    border: solid 1px #a3a3a3;
-    margin: 1px;
-    width: 18%;
-    vertical-align: center;
-    horiz-align: center;
-    border-radius: 5px;
-    display: flex;
-    height: 100%;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
+    .myitemimage li{
+        float: right;
+        list-style: none;
+        border-collapse: separate;
+        border-spacing: 15px;
+        border: solid 1px #a3a3a3;
+        margin: 1px;
+        width: 18%;
+        vertical-align: center;
+        horiz-align: center;
+        border-radius: 5px;
+        display: flex;
+        height: 100%;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
 
 
-}
+    }
     .myitemimage li:hover{
         border: solid 1px #848484;
     }
@@ -335,28 +658,171 @@
         height: 70px;
 
     }
-.myitemimages li{
-    float: right;
-    list-style: none;
-    border-collapse: separate;
-    border-spacing: 15px;
-    border: solid 1px #a3a3a3;
-    margin: 1px;
-    width: 32%;
-    vertical-align: center;
-    horiz-align: center;
-    border-radius: 5px;
-    display: flex;
-    height: 100%;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
+    .myitemimages li{
+        float: right;
+        list-style: none;
+        border-collapse: separate;
+        border-spacing: 15px;
+        border: solid 1px #a3a3a3;
+        margin: 1px;
+        width: 32%;
+        vertical-align: center;
+        horiz-align: center;
+        border-radius: 5px;
+        display: flex;
+        height: 100%;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
 
-}
+    }
     .myitemimage li   img{width: 100%;
         vertical-align: middle;
         max-height: 70px;
 
+    }
+    .colorobox li{
+        float: right;
+        list-style: none;
+        margin: 1px;
+        border-radius: 10px;
+        display: inline-block;
+    }
+    .colorobox li .cccc {
+        font-size: 14px;
+    }
+    .colorobox li .bbbb{
+        width: 20px;
+        height: 20px;
+        overflow: hidden;
+
+        border-radius: 5px;
+
+
+    }
+    .border-1{
+        border: solid 1px #a3a3a3;
+    }
+    .smallparageraph{
+        height: 44px;
+        overflow: hidden;
+    }
+    .largparageraph{
+
+    }
+    .morecomemnt{
+        overflow: hidden;
+    }
+    .mylistprice li{
+        list-style: none;
+    }
+    .bg-grey-lights{
+        text-align: right;
+        padding: 5px;
+        margin-top: 100px;
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0px 0px 34px 5px rgba(219,212,219,0.58);
+        -moz-box-shadow: inset 0px 0px 34px 5px rgba(219,212,219,0.58);
+        box-shadow: inset 0px 0px 34px 5px rgba(219,212,219,0.58);
+        border: 1px solid #e4e4e4;
+    }
+
+    .pricetext{
+        color: #8a8a8a;
+        font-size: 20px;
+
+    }
+    .pricetextsmall{
+        color: #8a8a8a;
+        font-size: 14px;
+
+    }
+    .pricevaluefinal span{
+        font-size: 26px !important;
+    }
+    .discount *{
+        font-size: 10px;
+        color: #a3a3a3;;
+    }
+    .discount{
+        text-decoration: line-through;
+        color: #a3a3a3;
+
+    }
+    .dpricevaluefinal *{
+        font-size: 10px;
+    }
+    .dpricevaluefinal{
+        text-align: left;
+        direction: ltr;
+        text-decoration:#333333 line-through;
+    }
+    .ouline-grey{
+        border: #717171 !important;
+    }
+    .my-2x{
+        font-size: 16px;
+        padding-top: 7px;
+    }
+    .sharemenu {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+    }
+
+    .sharemenu li {
+        float: right;
+        margin: 0px;
+        padding: 5px;
+        zoom: 85%;
+    }
+    .sharemenu li{
+        margin: 2px;
+    }
+    .sharemenu li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+    .iconshareite{
+        font-size: 14px;
+        color: #333333;
+    }
+    .iconshareitew{
+        font-size: 22px;
+        color: #fff;
+    }
+    .sharemenu li a:hover {
+        background-color: #111;
+    }
+    .iconshareite{
+        font-size: 18px;
+    }
+    .copiedtext{
+        color: #333333;
+    }
+    .bg-yellow{
+        background-color: #838383 !important;
+        color:yellow !important;
+    }
+    .myprice{
+        font-size: 20px;
+        font-weight: bold;
+        color: #383d41;
+    }
+    .mymainprice *{
+        font-size: 20px;
+    }
+    .mymaindiscount *{
+        text-decoration: line-through;
+    }
+    .backgroundcolor{
+        background-color: #383d41 !important;
+        color: #fff !important;
     }
 </style>

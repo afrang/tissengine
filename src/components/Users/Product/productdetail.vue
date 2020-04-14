@@ -3,6 +3,47 @@
         <!-- Modal -->
 
        <div class="wmaster text-right" dir="rtl">
+           <modal   scrollable="true"   height="auto" name="edirprice" dir="ltr" :key="'mip2'"  >
+               <div class="modal-content" v-if="editprice!=null">
+                   <div class="modal-body text-right">
+                        <label v-text="$t('price')"></label>
+                       <money dir="ltr"  class="form-control" v-model="editprice.price" v-bind="money"></money>
+                        <label v-text="$t('discount')"></label>
+                       <money dir="ltr"  class="form-control" v-model="editprice.discount" v-bind="money"></money>
+                       <label v-text="$t('percent')"></label>
+                        <input class="form-control w-24" type="number" min="0" max="100" v-model="editprice.percent">
+                       <input @click="savepriceattr" type="submit" class="form-control btn btn-secondary mt-4" :value="$t('save')">
+                   </div>
+               </div>
+
+           </modal>
+           <modal   scrollable="true"   height="auto" name="editfeature" dir="ltr" :key="'mi2'"  >
+               <div class="modal-content" v-if="editfeature!=null">
+                   <div class="modal-header text-right" dir="rtl" >
+                       <span v-text="editfeature.to_attr.name" ></span>
+                   </div>
+                   <div class="modal-body">
+                       <template v-if="editfeature.to_attr.mode==1">
+                           <tisseditor  :key="'esmailso'+4"  :text="editfeature.value" v-on:myevent="featurevalue"   :mode="'Product'"></tisseditor>
+                       </template>
+                       <template v-if="editfeature.to_attr.mode==2">
+                           <input type="number" class="form-control" v-model="editfeature.value">
+                       </template>
+                       <template v-if="editfeature.to_attr.mode==3">
+
+                       <select class="form-control" v-model="editfeature.value" dir="rtl">
+                           <option v-for="(item,index) in booleanhave" :key="'per'+index" :value="index" v-text="item"></option>
+                       </select>
+                       </template>
+                       <template v-if="editfeature.to_attr.mode==4">
+                           <select class="form-control" v-model="editfeature.value" dir="rtl">
+                               <option v-for="(item,index) in editfeature.to_attr.to_options" :key="'pser'+index" :value="item.id" v-text="item.name"></option>
+                           </select>
+                       </template>
+                       <input @click="savevaluefeature" type="button" class="btn mt-4 btn-primary" :value="$t('save')">
+                   </div>
+                   </div>
+           </modal>
            <modal   scrollable="true"   height="auto" name="hello-world" dir="ltr" :key="'mi'"  >
                <div class="modal-content">
                    <div class="modal-header text-right" >
@@ -10,7 +51,6 @@
                    </div>
                    <div class="modal-body">
                    <form  @submit.prevent="savecolor"  dir="rtl" v-if="coloredit!=null" class="form text-right row" >
-
                        <div class="form-group col-sm-12">
                        <a   class="btn   text-white m-1 w-100 text-right" >
                            <div  class="btncolor" :style="{ 'background-color': coloredit['to_color']['code'] }"></div>
@@ -18,9 +58,7 @@
 
                        </a>
                        </div>
-
                         <div class="form-group container col-sm-6 ">
-
                             <label v-text="$t('existing')"></label>
                             <select v-model="coloredit.existing" class="form-control">
                                 <option value="1" v-text="$t('yes')"></option>
@@ -40,13 +78,8 @@
                                    :deletefile="true"
                                    :file="coloredit.image"
                            ></file-uploader>
-
                        </div>
-
-
-
-
-                   </form>
+                  </form>
                    </div>
                    </div>
            </modal>
@@ -61,7 +94,6 @@
            <template v-if="mode=='list'">
 
                <table class="table  table-striped">
-
                    <thead>
                    <tr>
                        <th scope="col">#</th>
@@ -125,11 +157,11 @@
                                <a class="nav-link" data-toggle="tab" href="#menu1"  v-text="$t('images')" ></a>
                            </li>
                            <li class="nav-item">
-                               <a class="nav-link" data-toggle="tab" href="#menu2"   v-text="$t('PricingFeature')"></a>
+                               <a class="nav-link" data-toggle="tab" href="#menu2"  @click="loadattrprice" v-text="$t('PricingFeature')"></a>
                            </li>
 
                            <li class="nav-item">
-                               <a class="nav-link" data-toggle="tab" href="#menu3"   v-text="$t('Attribute')"></a>
+                               <a class="nav-link" data-toggle="tab" href="#menu3"   @click="loadattr"  v-text="$t('Attribute')"></a>
                            </li>
                            <li class="nav-item">
                                <a class="nav-link" @click="loadcolor" data-toggle="tab" href="#menu4"   v-text="$t('colormanager')"></a>
@@ -277,107 +309,156 @@
 
                            <div id="menu2" class="container tab-pane fade"><br>
 
-                               <h3 v-text="$t('fatureandprice')"></h3>
-                               <label v-text="$t('price')"></label>
-                               <money dir="ltr"  class="form-control" v-model="price" v-bind="money"></money>
-                               <label v-text="$t('pricediscount')"></label>
-                               <money dir="ltr"  class="form-control" v-model="discount" v-bind="money"></money>
-                               <label v-text="$t('percent')"></label>
-                               %  <input class="form-control w-25" type="number" min="0" max="100" v-model="percent">
+                               <h2 v-text="$t('fatureandprice')"></h2>
+                               <div class="row">
+                                   <div class="col-sm-5 col-xs-12">
+                                       <label v-text="$t('price')"></label>
+                                       <money dir="ltr"  class="form-control" v-model="price" v-bind="money"></money>
+                                   </div>
+                                   <div class="col-sm-5 col-xs-12">
+                                       <label v-text="$t('pricediscount')"></label>
+                                       <money dir="ltr"  class="form-control" v-model="discount" v-bind="money"></money>
+                                   </div>
+                                   <div class="col-sm-2 col-xs-12">
+                                       <label v-text="$t('percent')"></label>
+                                       %  <input class="form-control w-100" type="number" min="0" max="100" v-model="percent">
 
-                               <input type="button" class="btn btn-primary mt-4" @click="newpricesubmit" :value="$t('save')">
+                                       <input type="button" class="btn btn-primary mt-4" @click="newpricesubmit" :value="$t('save')">
+
+                                   </div>
+                                   </div>
                                <hr>
                                <div class="container">
-                                   <h4 v-text="$t('baseprice')"></h4>
-                                   <div v-for="(item,index) in product.to_group.to_attr" :key="'esm'+index" class="form-group col-sm-12 col-xs-12">
-
-                                       <label>{{ item.name }}</label>
-                                       <template v-if="item.mode==1">
-                                       <input @blur="textfea(item.id)" v-model="attr[item.id]" :ref="'fate'+item.id" class="form-control" type="text" >
-                                   </template>
-                                       <template v-if="item.mode==2">
-                                           <input @blur="textfea(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" type="number" min="1" >
-                                       </template>
-                                       <template v-if="item.mode==3">
-                                           <select  @blur="textfea(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" >
-                                               <option value="1" v-text="$t('yes')"></option>
-                                               <option value="0" v-text="$t('no')"></option>
-                                           </select>
-                                       </template>
-                                       <template v-if="item.mode==4">
-                                           <div :ref="'attr'+item.id" >
-                                               <pre>{{ pricelist }}</pre>
-                                               <template v-for="(opt,inx) in item.to_options"   >
-                                                   <div   :key="'esma'+inx">
-                                                       <div class="row">
-                                                       <div class="col-sm-6 col-xs-12">
-                                                           <div class="mychecker" dir="rtl">
-                                                               <label>
-
-                                                                   <input   :ref="'opt'+opt.id" v-model="optionattr[opt.id]"    :value="opt.id"  type="checkbox"  >
-                                                                   <span class="checkmark"></span>
-                                                                   <span v-text="opt.name"></span></label>
-                                                           </div>
-                                                           <input type="button" class="btn btn-primary" :value="$t('save')">
-                                                       </div>
-                                                       <div class="col-sm-6 col-xs-12">
-                                                           <label v-text="$t('price')"></label>
-                                                           <money dir="ltr"  class="form-control"  v-bind="money"></money>
-                                                           <label v-text="$t('pricediscount')"></label>
-                                                           <money dir="ltr"  class="form-control"  v-bind="money"></money>
-
-                                                       </div>
-                                                   </div>
-                                                   <hr>
-                                                   </div>
-                                               </template>
+                                   <h4 v-text="$t('otherprice')"></h4>
+                                   <div class="row">
+                                       <template v-for="(item,index) in product.to_group.to_attr">
+                                           <div v-if="!featurepriceselected.includes(item.id)" @click="addpriceattr(item.id)" :key="'feat'+index" class="tiss-cursur   m-4">
+                                               <span class="icofont-plus-square"></span>  <span>{{ item.name }}</span>
                                            </div>
                                        </template>
                                        <hr>
                                    </div>
+                                       <div class="">
+                                           <h3 v-text="$t('include')"></h3>
+                                           <hr>
+                                           <ul>
+                                               <li v-for="(item,index) in listporductattr" :key="'attr'+index" >
+                                                   <label class="text-success">
+                                                   <span @click="delattrprice(item.id)" class="icofont-ui-delete"></span> |
+                                                    <span v-text="item.to_attr.name"></span>
+                                                       <template v-if="pricemode==0">
+                                                           | <i class="text-white" v-text="$t('mainprice')"></i>
+                                                       </template>
+                                                       <template v-else>
+                                                          | <i class="text-white" v-text="$t('addtoprice')"></i>
+                                                       </template>
+                                                   </label>
+                                                   <table class="table table-dark">
+                                                       <thead>
+                                                       <td v-text="$t('name')"></td>
+                                                       <td v-text="$t('status')"></td>
+                                                       <td v-text="$t('price')"></td>
+                                                       <td v-text="$t('discount')"></td>
+                                                       <td v-text="$t('percent')"></td>
+                                                       <td v-text="$t('delete')"></td>
+                                                       </thead>
+                                                       <tr v-for="(opt,indexs) in item.to_attr.to_options" :key="'optpr'+indexs">
+                                                           <td><span ><label  v-text="opt.name"></label></span>
+                                                               <template  v-if="!item.to_option_value.find(obj => obj.parent == opt.id)" >
+                                                                   | <span @click="addfeatureopt(item.id,opt)" class="icofont-plus-square"></span>
+                                                               </template>
 
+
+                                                           </td>
+                                                           <td>
+                                                               <template v-if="item.to_option_value.find(obj => obj.parent == opt.id)">
+
+                                                                    <span class="icofont-check"></span>
+                                                               </template>
+                                                               <template v-else>
+                                                                   <span class="icofont-not-allowed"></span>
+                                                               </template>
+                                                           </td>
+                                                           <td>
+                                                               <div>
+                                                                   <template  v-if="item.to_option_value.find(obj => obj.parent == opt.id)" >
+                                                                       <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="item.to_option_value.find(obj => obj.parent == opt.id).to_price.price"></VueNumeric> <small v-text="$t('toman')"></small>
+                                                                   </template>
+                                                               </div>
+                                                         </td>
+                                                           <td>
+                                                               <div>
+                                                                   <template  v-if="item.to_option_value.find(obj => obj.parent == opt.id)" >
+                                                                       <VueNumeric  dir="rtl" :read-only="true"  separator="," v-model="item.to_option_value.find(obj => obj.parent == opt.id).to_price.discount"></VueNumeric> <small v-text="$t('toman')"></small>
+                                                                   </template>
+                                                               </div>
+                                                         </td>
+                                                           <td>
+                                                               <div>
+                                                                   <template  v-if="item.to_option_value.find(obj => obj.parent == opt.id)" >
+                                                                       {{ item.to_option_value.find(obj => obj.parent == opt.id).to_price.percent}}
+                                                                   </template>
+                                                               </div>
+                                                         </td>
+                                                           <td>
+                                                               <template  v-if="item.to_option_value.find(obj => obj.parent == opt.id)" >
+
+                                                               <span  @click="delitemprice(item.to_option_value.find(obj => obj.parent == opt.id).id)" class="btn btn-sm btn-secondary mr-2  icofont-delete-alt"></span>
+                                                               <span  @click="edititemprice(item.to_option_value.find(obj => obj.parent == opt.id).to_price)" class="btn btn-sm btn-secondary  mr-2 icofont-edit-alt"></span>
+                                                               </template>
+                                                           </td>
+                                                       </tr>
+                                                   </table>
+                                               </li>
+                                           </ul>
                                    </div>
+                               </div>
                            </div>
                            <div id="menu3" class="container tab-pane fade"><br>
                                <h3 v-text="$t('feature')"></h3>
                                <hr>
                                <div class="container">
-                                   <div v-for="(item,index) in product.to_group.to_feature" :key="'esmai'+index" class="form-group col-sm-12 col-xs-12">
+                                   <h3 v-text="$t('youcanuse')"></h3>
 
-                                       <label>{{ item.name }}</label>
-                                       <template v-if="item.mode==1">
+                                   <div class="row">
+                                            <template v-for="(item,index) in product.to_group.to_feature">
+                                                <div v-if="!featureselected.includes(item.id)"  @click="addattr(item.id)" :key="'esmai'+index" class="tiss-cursur   m-4">
+                                                  <span class="icofont-plus-square"></span>  <span>{{ item.name }}</span>
+                                                </div>
+                                            </template>
 
-                                           <input @blur="textattr(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" type="text" >
-                                       </template>
-                                       <template v-if="item.mode==2">
-                                           <input @blur="textattr(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" type="number" min="1" >
-                                       </template>
-                                       <template v-if="item.mode==3">
-                                           <select  @blur="textattr(item.id)" v-model="attr[item.id]" :ref="'attr'+item.id" class="form-control" >
-                                               <option value="1" v-text="$t('yes')"></option>
-                                               <option value="0" v-text="$t('no')"></option>
-                                           </select>
-                                       </template>
-                                       <template v-if="item.mode==4">
-                                           <div :ref="'attr'+item.id" >
-                                               <pre>{{ item.id }}</pre>
-
-                                               <div v-for="(opt,inx) in item.to_options" :key="'esmail'+inx" class="mychecker" dir="rtl">
-                                                   <label>
-                                                       <pre style="color:#fff;">FUCK DAY {{ optionsattr[opt.id] }}</pre>
-
-                                                       <input   :name="'opt'+opt.id"
-
-                                                                @change="clickoptattr(opt.id,item.id,$event)"
-                                                                type="checkbox"
-                                                       >
-                                                       <span class="checkmark"></span>
-                                                       <span v-text="opt.name"></span></label>
-                                               </div>
-                                           </div>
-                                       </template>
-                                       <hr>
                                    </div>
+                                   <hr>
+                                   <div>
+                                       <h3 v-text="$t('include')"></h3>
+                                       <hr>
+                                       <ul>
+                                           <li v-for="(item,index) in listporductdetail" :key="'attr'+index" >
+                                            <label class="text-success">
+                                                <span @click="editattr(index)" class="icofont-ui-edit"></span> |
+                                                <span @click="delattr(item.id)" class="icofont-ui-delete"></span> |
+                                                <span  v-text="item.to_attr.name"></span></label>
+                                              <template v-if="item.to_attr.mode==1">
+                                                  <div v-html="item.value" class="box-text"></div>
+                                              </template>
+                                               <template v-if="item.to_attr.mode==2">
+                                                   :  <span  v-text="item.value"></span><span v-text="item.unit"></span>
+                                              </template>
+                                               <template v-if="item.to_attr.mode==3">
+                                                 :  <span v-if='item.value=="1"' v-text="$t('have')"></span>
+                                                   <span v-if='item.value=="0"' v-text="$t('nothaving')"></span>
+                                              </template>
+                                               <template v-if="item.to_attr.mode==4" >
+                                                   <template v-if="item.value!=null">
+                                                       : {{ item.to_attr.to_options.find( obj => obj.id ==item.value).name }}
+
+                                                   </template>
+                                               </template>
+
+                                           </li>
+                                       </ul>
+                                   </div>
+
 
                                </div>
                            </div>
@@ -406,8 +487,6 @@
 
            </template>
        </div>
-        <pre>{{ product }}</pre>
-
         <showerror :errors="error"></showerror>
     </div>
 </template>
@@ -419,6 +498,7 @@
     import VueTagsInput from '@johmun/vue-tags-input';
 
     import {Money} from 'v-money';
+    import VueNumeric from 'vue-numeric';
 
     export default {
         name: "productdetail.vue",
@@ -427,10 +507,12 @@
             Tisseditor,
             FileUploader,
             Money,
-            VueTagsInput
+            VueTagsInput,
+            VueNumeric
         },
         data() {
             return {
+
                 tags:[],
                 tag:'',
                 money: {
@@ -457,6 +539,8 @@
                 listitems:[],
                 optionsattr:[],
                 imagelist:[],
+                editfeature:null,
+
                 product:{
                     id:null,
                     name:null,
@@ -477,7 +561,15 @@
                     0:this.$t('no'),
                     1:this.$t('yes'),
 
-                }
+                },
+                booleanhave:{
+                    0:this.$t('nothaving'),
+                    1:this.$t('have'),
+
+                },
+                listporductdetail:null,
+                listporductattr:null,
+                editprice:null
 
             }
         },
@@ -485,28 +577,7 @@
         watch: {
             product:function (data) {
                 let that=this;
-                    data.to_attr.filter(function (attr) {
-                        if(attr.value=='options'){
-                            attr.to_option_value.filter(function (opt){
-                                if(opt.value!=0){
-                                   // console.log(that.optionsattr[opt.attr])
-                                   // that.optionsattr[opt.attr]=true;
-                                    console.log('opt'+opt.attr);
-                                    console.log(opt.value);
-                                    console.log('Fucx');
-                                    console.log(that.$refs);
-                                    alert('opt'+opt.attr);
-                                    that.opt.attr='yes';
-                                    document.getElementsByName('opt14').checked=true;
-                                    console.log(that.$refs['opt'+opt.attr][0]);
-                                   // that.$refs['opt'+opt.attr][1]['checked']=true;
-                                };
 
-                            });
-                        }else{
-                            that.attr[attr.attr]=attr.value;
-                        }
-                    });
                     data.to_price.filter(function (attr) {
                         if(attr.attr==0){
                             that.price=attr.price;
@@ -517,6 +588,25 @@
             }
         },
         computed:{
+            featurepriceselected(){
+                let marray=[];
+                if(this.listporductattr!=null){
+                    this.listporductattr.map(function (item){
+                        marray.push(item.to_attr.id);
+                    });
+                }
+                return marray;
+            },
+            featureselected(){
+                let marray=[];
+                if(this.listporductdetail!=null){
+                this.listporductdetail.map(function (item){
+                    console.log(item.to_attr.id);
+                   marray.push(item.to_attr.id);
+                });
+                }
+                return marray;
+            },
             filteredItems() {
                 return this.autocompleteItems.filter(i => {
                     return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
@@ -540,6 +630,20 @@
         },
 
         methods:{
+            addfeatureopt(parent,myoption){
+              let that=this;
+              let data={
+                  attr:parent,
+                  id:myoption.id,
+              };
+              this.$axios.post(this.$url+'user/popt',data,{
+                  headers:{
+                      Authorization: localStorage.token
+                  }
+              }).then(function () {
+                  that.loadattrprice();
+              })
+            },
             colororderup(id){
                 let self=this;
                 this.$axios.get(this.$url+'user/colororderup/'+id,{
@@ -563,10 +667,8 @@
             colororderdown(id){
                 let self=this;
                 this.$axios.get(this.$url+'user/colororderdown/'+id,{
-
                     headers:{
                         Authorization: localStorage.token
-
                     }
                 }).then(function (res) {
                     self.loadcolor();
@@ -640,38 +742,7 @@
                     }
                 });
             },
-            checkboxattr(id){
-                console.log(this.attr[id]);
-              /*  this.$refs['attr'+id][0]['children'].map(function (m) {
-                    console.log(m);
-                })*/
-            },
-            textfea(id){
 
-        /*        let data={
-                    id:id,
-                    product:this.product.id,
-                    value:this.$refs['attr'+id][0]['value']
-                }
-                this.$axios.post(this.$url+'user/pattr',data, {
-                    headers: {
-                        Authorization: localStorage.token
-                    }
-                });*/
-            },
-            textattr(id){
-
-                    let data={
-                        id:id,
-                        product:this.product.id,
-                        value:this.$refs['attr'+id][0]['value']
-                    }
-                this.$axios.post(this.$url+'user/pattr',data, {
-                    headers: {
-                        Authorization: localStorage.token
-                    }
-                });
-            },
             // End Attr Controller
             iamgemanagers(e){
             this.coloredit.image=e;
@@ -754,6 +825,9 @@
             helpedit(e){
                 this.product.help=e;
             },
+            featurevalue(e){
+                this.editfeature.value=e;
+            },
             urlcreate(){
                 if(this.product.id==null){
                     let str=this.product.name;
@@ -795,6 +869,128 @@
                 }
 
             },
+            addattr(id){
+                let that=this;
+                let data={
+                    id:id,
+                    product:this.product.id,
+                    value:null
+                }
+                this.$axios.post(this.$url+'user/pfeature',data,{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+
+                })
+                    .then(function (res) {
+                    that.loadattr();
+                    });
+            },
+            addpriceattr(id){
+                let that=this;
+                let data={
+                    id:id,
+                    product:this.product.id,
+                    value:null
+                }
+                this.$axios.post(this.$url+'user/pattr',data,{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+
+                })
+                    .then(function (res) {
+                    that.loadattrprice();
+                    });
+            },
+            editattr(index){
+              this.editfeature=this.listporductdetail[index];
+                this.$modal.show('editfeature');
+
+            },
+            delattr(id){
+                let that=this;
+                this.$axios.delete(this.$url+'user/pfeature/'+id,{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function (res) {
+                    that.loadattr();
+                })
+            },
+            delattrprice(id){
+              let that=this;
+              this.$axios.delete(this.$url+'user/pattr/'+id,{
+                  headers: {
+                      Authorization:localStorage.token
+                  }
+              }).then(function (res) {
+                  that.loadattrprice();
+              });
+            },
+            loadattr(){
+                let that=this;
+                this.$axios.get(this.$url+'user/pfeature/'+this.product.id,{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+
+                })
+                    .then(function (res) {
+                        console.log(res.data);
+                        that.listporductdetail=res.data;
+                    })
+            },
+            loadattrprice(){
+                let that=this;
+                this.$axios.get(this.$url+'user/pattr/'+this.product.id,{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+
+                })
+                    .then(function (res) {
+                        that.listporductattr=res.data;
+                    })
+            },
+            edititemprice(price){
+                this.editprice=price;
+                this.$modal.show('edirprice');
+
+            },
+            delitemprice(id){
+                let that=this;
+                this.$axios.delete(this.$url+'user/popt/'+id,{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function (red) {
+                    that.loadattrprice();
+                })
+            },
+            savepriceattr(){
+                let that=this;
+                this.$axios.put(this.$url+'user/pprice/'+this.editprice.id,this.editprice,{
+                    headers: {
+                        Authorization:localStorage.token
+                    }
+                }).then(function (res) {
+                    that.$modal.hide('edirprice');
+
+                })
+            },
+            savevaluefeature(){
+              let that=this;
+              this.$axios.put(this.$url+'user/pfeature/'+this.editfeature.id,this.editfeature,{
+                  headers: {
+                      Authorization:localStorage.token
+                  }
+
+              }).then(function (res) {
+                  that.loadattr();
+                  that.$modal.hide('editfeature');
+              })
+            },
             resetform(){
                 this.product={
                     id:null,
@@ -827,6 +1023,7 @@
                  /**/
                 });
             },
+
             listgroup(){
 
                 let that=this;
@@ -960,5 +1157,15 @@
     }
     .mylistcolor li{
         list-style: none;
+    }
+    .tiss-cursur:hover{
+        font-weight: bold;
+    }
+    .box-text{
+        border: solid 1px rgba(255, 255, 255, 0.02);
+        padding: 15px;
+        margin-top: 5px;
+        border-radius: 45px;
+
     }
 </style>

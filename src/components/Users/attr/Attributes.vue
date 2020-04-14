@@ -97,7 +97,10 @@
                             <div class="col-sm-6">
                                 <label   v-text="$t('mode')"></label>
                                 <select class="form-control" v-model="detail.mode">
-                                    <option v-for="(item,index) in model" :key="index" :value="item.id" v-text="$t(item.name)"></option>
+                                    <template v-for="(item,index) in model">
+                                        <option  :key="index" v-if="item.id==4" :value="item.id" v-text="$t(item.name)"></option>
+
+                                    </template>
                                 </select>
 
                             </div>
@@ -110,6 +113,14 @@
 
                             </div>
                             <div class="col-sm-6">
+                                <label   v-text="$t('pricemode')"></label>
+                                <select class="form-control" v-model="detail.pricemode">
+                                    <option value="0" v-text="$t('mainprice')"></option>
+                                    <option value="1" v-text="$t('addtoprice')"></option>
+                                </select>
+
+                            </div>
+                            <div class="col-sm-12">
                                 <template v-if="detail.mode==4">
                                     <label   v-text="$t('options')"></label>
                                     <div>
@@ -189,6 +200,7 @@
                     unit:null,
                     image:null,
                     help:null,
+                    pricemode:null,
 
                 },
                 itemlist:null,

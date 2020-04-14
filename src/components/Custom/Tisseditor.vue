@@ -78,7 +78,7 @@
                 </div>
             </div>
             <hr>
-            <div class="row">
+            <div class="row" dir="ltr">
 
                 <template  v-for="(item,index) in files"  >
 
@@ -135,7 +135,12 @@
         <template v-if="showeditors==true">
 
         </template>
+<!--
         <froala id="edit" :key="keys" :tag="'textarea'"   :config="config" v-model="vtext"></froala>
+-->
+
+        <ckeditor  :editorUrl="editorUrl"  v-model="vtext" :config="editorConfig"></ckeditor>
+
 
         <a @click="apartshow" class="btn text-white btn-sm btn-dark m-1">{{ $t('Aparat')}} | <span class="icofont-ui-movie"></span>  </a>
         <a @click="codeshow"  class="btn  text-white btn-sm btn-dark m-1">{{ $t('embedcode')}} | <span class="icofont-code"></span> </a>
@@ -148,12 +153,11 @@
 <script>
     import vue2Dropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
-
+    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
     export default {
         components: {
-            vueDropzone: vue2Dropzone
+            vueDropzone: vue2Dropzone,
         },
-
         computed: {
 
             // a computed getter
@@ -233,6 +237,12 @@
         },
         data() {
             return {
+                editor: ClassicEditor,
+                editorConfig: {
+
+                },
+                editorUrl:this.$storage+'js/ckeditor/ckeditor.js',
+
                 vtext:null,
                 aparat:null,
                 code:null,
@@ -391,7 +401,6 @@
             this.showitem();
 
 
-
         },
         beforeUpdate: function () {
             if(this.vtext==null){
@@ -405,6 +414,7 @@
 </script>
 
 <style scoped>
+
     .v--modal{
         width: 100%;
         overflow: scroll !important;

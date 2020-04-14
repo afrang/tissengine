@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <froalaView   dir="rtl" v-model="ctext"></froalaView>
+            <div v-html="ctext"></div>
 
         </div>
     </div>
