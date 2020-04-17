@@ -1,6 +1,6 @@
 # TISS ENGINE 2 
 ##### Close Project and Convert to Nuxt.js
-## Conver to  https://github.com/afrang/FrontNuxt
+## Convert to  https://github.com/afrang/FrontNuxt
 ### AfrangArt Desing Studio
 [![N|Solid](https://afrang.dev/media/Layout/1logo.png?=737)](https://afrang.dev)
 > AfrangArt Design Studio Developer on Web Application. 
